@@ -13,14 +13,14 @@ import ctypes
 #// TODO:實作介面語言字串全域變數
 
 # load excel file to be processed
-def loadExcelFile(filePath, window):
+def loadExcelFile(filePath):
     fileName = os.path.basename(filePath)
     os.chdir(os.path.dirname(filePath))
     MessageBox = ctypes.windll.user32.MessageBoxW
     if not os.path.isfile(fileName):
+        # sg.popup("File not exist!")
         MessageBox(None, "File not exist!", "File Operation", 0)
-    else:
-        window.Element('loadingResult').Update('Success')  #showing loading result
+    else:        
         return fileName
 
 # load program setting from setting.json
@@ -41,7 +41,7 @@ def loadLang(langCode):
     return langString
 
 # setup window layout
-def setLayout(langString):
+def setWindow(langString):
     #// TODO: 實作載入目標語言字串
     # setup window layout
     layout = [[sg.Text('Program Setting' + ':')],
@@ -50,10 +50,10 @@ def setLayout(langString):
               [sg.Text('_' * 100, size=(70, 1))],
               [sg.Text('Load trade history file' + ':')],
               [sg.Text('File' + ':', justification='right'),
-               sg.InputText(), sg.FileBrowse(), sg.Button('Load File')], [sg.Text('Result' + ':'), sg.Text("", key='loadingResult')],
+               sg.InputText(), sg.FileBrowse(), sg.Button('Load File')], [sg.Text('Result' + ':'), sg.Text('', key='loadingResult')],
               [sg.Text('_' * 100, size=(70, 1))],
               [sg.Button('Update History'), sg.Button('Exit')],
-              [sg.Text('Result' + ':'), sg.Text("", key='Result')]]
+              [sg.Text('Result' + ':'), sg.Text('', key='Result')]]
     # rendering window
     window = sg.Window('Trade History Formatter', auto_size_text=True,
                        default_element_size=(40, 10)).Layout(layout)
@@ -69,7 +69,8 @@ def main(window):
             if values['Browse'] is None or values['Browse'] == '':                
                 MessageBox(None, "Please select file first!", "File Operation", 0)
             else:
-                fileName = loadExcelFile(values['Browse'], window)
+                fileName = loadExcelFile(values['Browse'])
+                window.Element('loadingResult').Update('Success')  #showing loading result
         elif event == 'Load Setting File':
             #// TODO:實作載入設定檔
             pass
@@ -92,5 +93,5 @@ def main(window):
 
 if __name__ == '__main__':
     lang = loadLang('default')
-    layout = setLayout(lang)
-    main(layout)
+    window = setWindow(lang)
+    main(window)
