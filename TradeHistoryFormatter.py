@@ -11,6 +11,7 @@ import ctypes
 # openpyxl.utils.cell.coordinate_to_tuple('B3')  // (3, 2)
 
 #// TODO:實作介面語言字串全域變數
+sg.change_look_and_feel('Dark Blue 3')  # windows colorful
 
 # load excel file to be processed
 def loadExcelFile(filePath):
@@ -35,7 +36,7 @@ def editSetting():
 def saveSetting():
     pass
 
-# load HMI langage from lang.json
+# load GUI langage from lang.json
 def loadLang(langCode):
     langString = 0
     return langString
@@ -43,20 +44,19 @@ def loadLang(langCode):
 # setup window layout
 def setWindow(langString):
     #// TODO: 實作載入目標語言字串
+    #// TODO: 實作版本號介面
     # setup window layout
     layout = [[sg.Text('Program Setting' + ':')],
-              [sg.FileBrowse('Load Setting File'),
-               sg.Button('Open Setting Editor')],
+              [sg.FileBrowse('Load Setting File'), sg.Button('Open Setting Editor')],
               [sg.Text('_' * 100, size=(70, 1))],
               [sg.Text('Load trade history file' + ':')],
-              [sg.Text('File' + ':', justification='right'),
-               sg.InputText(), sg.FileBrowse(), sg.Button('Load File')], [sg.Text('Result' + ':'), sg.Text('', key='loadingResult')],
+              [sg.Text('File' + ':', justification='right'), sg.InputText(), sg.FileBrowse(file_types=(("Spreadsheet Files", "*.xls"),("Spreadsheet Files", "*.xlsx"),)), sg.Button('Load File')],
+              [sg.Text('Result' + ':'), sg.Text('', key='loadingResult')],
               [sg.Text('_' * 100, size=(70, 1))],
               [sg.Button('Update History'), sg.Button('Exit')],
               [sg.Text('Result' + ':'), sg.Text('', key='Result')]]
     # rendering window
-    window = sg.Window('Trade History Formatter', auto_size_text=True,
-                       default_element_size=(40, 10)).Layout(layout)
+    window = sg.Window('Trade History Formatter', auto_size_text=True, default_element_size=(40, 10), resizable=False).Layout(layout)
     return window
 
 # Main Program
@@ -92,6 +92,7 @@ def main(window):
     window.Close()
 
 if __name__ == '__main__':
+    loadSetting()
     lang = loadLang('default')
     window = setWindow(lang)
     main(window)
