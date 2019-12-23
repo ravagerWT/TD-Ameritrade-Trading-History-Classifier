@@ -64,11 +64,11 @@ def loadExcelFile(filePath):
 
 # excel processor
 def excelProcessor(fileName, symbol_list = []):
-    sheet_list = ['Sorted trade history','ORDINARY DIVIDEND','W-8 WITHHOLDING','WIRING INFO','Ver']    
+    sheet_list = ['Sorted trade history','ORDINARY DIVIDEND','W-8 WITHHOLDING','WIRING INFO','Ver','log']    
     # loading workbook
     wb = load_workbook(fileName)
     # create sheets
-    for i in range(5):
+    for i in range(len(sheet_list)):
         if not sheet_list[i] in wb.sheetnames:
             wb.create_sheet(sheet_list[i])
     
@@ -78,6 +78,7 @@ def excelProcessor(fileName, symbol_list = []):
     ws_W8 = wb["W-8 WITHHOLDING"]
     ws_WI = wb["WIRING INFO"]
     ws_ver = wb["Ver"]
+    ws_log = wb["log"]
 
     # setting layout
     ws_STH['A2'] = 'DATE' # Sorted trade history
@@ -87,6 +88,8 @@ def excelProcessor(fileName, symbol_list = []):
     ws_WI['B1'] = 'Amount'
     ws_ver['A1'] = 'DATE' # Ver
     ws_ver['B1'] = 'Ver'
+    ws_log['A1'] = 'Event'
+    ws_log['B1'] = 'Message'
 
     # start sheets process
     counter = 0
@@ -136,7 +139,6 @@ def excelProcessor(fileName, symbol_list = []):
             ws_STH.cell(3, symbol_index*4+3).value = tr_price.value
             ws_STH.cell(3, symbol_index*4+4).value = tr_fee.value
             ws_STH.cell(3, symbol_index*4+5).value = tr_amount.value
-
         #// TODO: 待確認關鍵字
         elif 'Sold' in tr_description.value:
             ws_STH.insert_rows(3)  # add new row
@@ -153,16 +155,22 @@ def excelProcessor(fileName, symbol_list = []):
                 ws_W8.insert_rows(2)  # add new row                           
                 ws_W8.cell(2, 1).value = date_for_sheet # date     
                 iter_date_W8 = tr_date.value
-            if tr_symbol == None:
-                ws_W8.cell(2, len(symbol_list)+2).value = tr_amount.value
+            if tr_symbol.value == None:
+                ws_log.insert_rows(2)
+                ws_log.cell(2, 1).value = 'WITHHOLDING'
+                ws_log.cell(2, 2).value = 'No symbol information on ' + str(i) + 'th row'
+                # ws_W8.cell(2, len(symbol_list)+2).value = tr_amount.value
             else:
                 ws_W8.cell(2, symbol_index+2).value = tr_amount.value
         #// TODO: 待確認以下關鍵字：出金
         else:
             #// TODO: 實作輸出log檔功能
-            print('not in the known keyword: ' + ws_tran.cell(i, 3).value)
+            ws_log.insert_rows(2)
+            ws_log.cell(2, 1).value = 'Description keyword missing'
+            ws_log.cell(2, 2).value = 'not in the known keyword: ' + tr_description.value + ' on '+ str(i) + 'th row'
+            # print('not in the known keyword: ' + ws_tran.cell(i, 3).value)
 
-    wb.save('transactions_forTest_r1.xlsx')
+        wb.save('transactions_forTest_r1.xlsx')
     
 # Main Program
 def main(window):
