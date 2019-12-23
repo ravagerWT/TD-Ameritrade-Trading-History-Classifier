@@ -170,7 +170,21 @@ def excelProcessor(fileName, symbol_list = []):
             ws_log.cell(2, 2).value = 'not in the known keyword: ' + tr_description.value + ' on '+ str(i) + 'th row'
             # print('not in the known keyword: ' + ws_tran.cell(i, 3).value)
 
-        wb.save('transactions_forTest_r1.xlsx')
+    # version control
+    file_version = ws_ver['B2'].value  # get current file version
+    [file, ext] = os.path.splitext(fileName)
+    if file_version == None:
+        ws_ver['A2'] = date.today().strftime("%Y/%m/%d")  # date
+        ws_ver['B2'] = 0
+        file_version = 0
+    else:
+        ws_ver.insert_rows(2)  # add new row
+        ws_ver['A2'] = date.today().strftime("%Y/%m/%d")  # date
+        file_version += 1  # update version number
+        ws_ver['B2'] = file_version
+    fileNameRev = file + '_r' + str(file_version) + ext
+    
+    wb.save(fileNameRev)  # save processed file
     
 # Main Program
 def main(window):
