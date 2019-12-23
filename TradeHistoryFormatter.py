@@ -6,6 +6,7 @@ import PySimpleGUI as sg
 from openpyxl import load_workbook
 # import openpyxl.worksheet
 import ctypes
+from datetime import datetime, date, time
 
 # openpyxl.utils.cell.coordinate_from_string('B3')  // ('B', 3)
 # openpyxl.utils.cell.column_index_from_string(a[0])  // 2
@@ -87,21 +88,27 @@ def excelProcessor(fileName, symbol_list = []):
     ws_ver['A1'] = 'DATE' # Ver
     ws_ver['B1'] = 'Ver'
 
+    # start sheets process
     counter = 0
-    temp_tr_date = ''
-    # gather all stock symbol from 'E5'
+    iter_date_STH = ''
+    iter_date_OD = ''
+    iter_date_W8 = ''
+    iter_date_WI = ''
     for i in range(2, ws_tran.max_row):
         tr_date = ws_tran.cell(i, 1)
+        # date process
+        temp_date_for_sheet = datetime.strptime(tr_date.value, "%m/%d/%Y")
+        date_for_sheet = temp_date_for_sheet.strftime("%Y/%m/%d")
         tr_description = ws_tran.cell(i, 3)
         tr_quan = ws_tran.cell(i, 4)
-        tr_symbol = ws_tran.cell(i, 5)
+        tr_symbol = ws_tran.cell(i, 5)        
         tr_price = ws_tran.cell(i, 6)
         tr_fee = ws_tran.cell(i, 7)
         tr_amount = ws_tran.cell(i, 8)
-        # processing sheets format by stock symbols
+        # processing sheets format by stock symbols and gather all stock symbol from 'E5'
         if not tr_symbol.value in symbol_list and not tr_symbol.value == None:
             counter += 1
-            symbol_list.append(ws_tran.cell(i, 5).value)
+            symbol_list.append(ws_tran.cell(i, 5).value) # gather stock symbol
             ws_STH.cell(1, counter*4-2).value = ws_tran.cell(i,
                                                              5).value  # stock symbol
             ws_STH.cell(2, counter*4-2).value = 'Quantity'
@@ -115,14 +122,16 @@ def excelProcessor(fileName, symbol_list = []):
 
         # sorting trade history
         if 'WIRE INCOMING' in tr_description.value:
-            ws_WI.insert_rows(2)  # add new row
-            ws_WI.cell(2, 1).value = tr_date.value  # date
-            ws_WI.cell(2, 2).value = tr_amount.value  # amount
-        elif 'Bought' in tr_description.value:
-            symbol_index = symbol_list.index(tr_symbol.value)
-            if not tr_date.value == temp_tr_date:
-                ws_STH.insert_rows(3)  # add new row
-                temp_tr_date = tr_date.value
+            if not tr_date.value == iter_date_WI:
+                ws_WI.insert_rows(2)  # add new row
+                ws_WI.cell(2, 1).value = date_for_sheet  # date
+                ws_WI.cell(2, 2).value = tr_amount.value  # amount
+        elif 'Bought' in tr_description.value:            
+            symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
+            if not tr_date.value == iter_date_STH:
+                ws_STH.insert_rows(3)  # add new row                           
+                ws_STH.cell(3, 1).value = date_for_sheet # date     
+                iter_date_STH = tr_date.value
             ws_STH.cell(3, symbol_index*4+2).value = tr_quan.value
             ws_STH.cell(3, symbol_index*4+3).value = tr_price.value
             ws_STH.cell(3, symbol_index*4+4).value = tr_fee.value
@@ -133,9 +142,21 @@ def excelProcessor(fileName, symbol_list = []):
             ws_STH.insert_rows(3)  # add new row
             pass
         elif 'ORDINARY DIVIDEND' in tr_description.value:
-            pass
-        elif 'WITHHOLDING' in tr_description.value:
-            pass
+            symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
+            if not tr_date.value == iter_date_OD:
+                ws_OD.insert_rows(2)  # add new row                           
+                ws_OD.cell(2, 1).value = date_for_sheet # date     
+                iter_date_OD = tr_date.value
+            ws_OD.cell(2, symbol_index+2).value = tr_amount.value
+        elif 'WITHHOLDING' in tr_description.value:            
+            if not tr_date.value == iter_date_W8:
+                ws_W8.insert_rows(2)  # add new row                           
+                ws_W8.cell(2, 1).value = date_for_sheet # date     
+                iter_date_W8 = tr_date.value
+            if tr_symbol == None:
+                ws_W8.cell(2, len(symbol_list)+2).value = tr_amount.value
+            else:
+                ws_W8.cell(2, symbol_index+2).value = tr_amount.value
         #// TODO: 待確認以下關鍵字：出金
         else:
             #// TODO: 實作輸出log檔功能
