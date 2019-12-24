@@ -92,7 +92,6 @@ def excelProcessor(fileName, symbol_list = []):
     ws_log['B1'] = 'Message'
 
     # start sheets process
-    counter = 0
     iter_date_STH = ''
     iter_date_OD = ''
     iter_date_W8 = ''
@@ -109,29 +108,28 @@ def excelProcessor(fileName, symbol_list = []):
         tr_fee = ws_tran.cell(i, 7)
         tr_amount = ws_tran.cell(i, 8)
         # processing sheets format by stock symbols and gather all stock symbol from 'E5'
-        if not tr_symbol.value in symbol_list and not tr_symbol.value == None:
-            counter += 1
-            symbol_list.append(ws_tran.cell(i, 5).value) # gather stock symbol
-            ws_STH.cell(1, counter*4-2).value = ws_tran.cell(i,
-                                                             5).value  # stock symbol
-            ws_STH.cell(2, counter*4-2).value = 'Quantity'
-            ws_STH.cell(2, counter*4-1).value = 'Price'
-            ws_STH.cell(2, counter*4).value = 'Fee'
-            ws_STH.cell(2, counter*4+1).value = 'Amount'
+        if not tr_symbol.value in symbol_list and tr_symbol.value != None:            
+            symbol_list.append(tr_symbol.value) # gather stock symbol
+            symbol_index = symbol_list.index(tr_symbol.value)
+            ws_STH.cell(1, symbol_index*4+2).value = tr_symbol.value  # stock symbol
+            ws_STH.cell(2, symbol_index*4+2).value = 'Quantity'
+            ws_STH.cell(2, symbol_index*4+3).value = 'Price'
+            ws_STH.cell(2, symbol_index*4+4).value = 'Fee'
+            ws_STH.cell(2, symbol_index*4+5).value = 'Amount'
             # // TODO:待實作儲存格合併功能及顏色區別
-            ws_OD.cell(1, counter+1).value = ws_tran.cell(i, 5).value
-            ws_W8.cell(1, counter+1).value = ws_tran.cell(i, 5).value
-            # print(ws_tran.cell(i, 5).value)  # debug message
+            ws_OD.cell(1, symbol_index+2).value = tr_symbol.value
+            ws_W8.cell(1, symbol_index+2).value = tr_symbol.value
+            # print(tr_symbol.value)  # debug message
 
         # sorting trade history
         if 'WIRE INCOMING' in tr_description.value:
-            if not tr_date.value == iter_date_WI:
+            if tr_date.value != iter_date_WI:
                 ws_WI.insert_rows(2)  # add new row
                 ws_WI.cell(2, 1).value = date_for_sheet  # date
                 ws_WI.cell(2, 2).value = tr_amount.value  # amount
         elif 'Bought' in tr_description.value:            
             symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
-            if not tr_date.value == iter_date_STH:
+            if tr_date.value != iter_date_STH:
                 ws_STH.insert_rows(3)  # add new row                           
                 ws_STH.cell(3, 1).value = date_for_sheet # date     
                 iter_date_STH = tr_date.value
@@ -145,13 +143,13 @@ def excelProcessor(fileName, symbol_list = []):
             pass
         elif 'ORDINARY DIVIDEND' in tr_description.value:
             symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
-            if not tr_date.value == iter_date_OD:
+            if tr_date.value != iter_date_OD:
                 ws_OD.insert_rows(2)  # add new row                           
                 ws_OD.cell(2, 1).value = date_for_sheet # date     
                 iter_date_OD = tr_date.value
             ws_OD.cell(2, symbol_index+2).value = tr_amount.value
         elif 'WITHHOLDING' in tr_description.value:            
-            if not tr_date.value == iter_date_W8:
+            if tr_date.value != iter_date_W8:
                 ws_W8.insert_rows(2)  # add new row                           
                 ws_W8.cell(2, 1).value = date_for_sheet # date     
                 iter_date_W8 = tr_date.value
