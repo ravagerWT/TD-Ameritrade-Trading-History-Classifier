@@ -1,0 +1,61 @@
+{
+    "lang": "en-US",
+    "GUI": [
+        {
+            "title": "Trade History Formatter",
+            "program_setting": "Program Setting",
+            "load_setting_file": "Load Setting File",
+            "open_setting_editor": "Open Setting Editor",
+            "load_trade_history_file": "Load trade history file",
+            "file": "File",
+            "load File": "Load File",
+            "spreadsheet_files": "Spreadsheet Files",
+            "result": "Result",
+            "process_history": "Process History",
+            "exit": "Exit"
+        }
+    ],
+    "excel": [
+        {
+            "sheet_names": [
+                "Sorted trade history",
+                "ORDINARY DIVIDEND",
+                "W-8 WITHHOLDING",
+                "WIRING INFO",
+                "Ver",
+                "log"
+            ],
+            "table_title": [
+                {
+                    "date": "Date",
+                    "quantity": "Quantity",
+                    "symbol": "Symbol",
+                    "price": "Price",
+                    "commission": "Commission",
+                    "amount": "Amount",
+                    "ver": "Ver",
+                    "event": "Event",
+                    "message": "Message"
+                }
+            ]
+        }
+    ],
+    "error_log": [
+        {
+            "event": [
+                {
+                    "description_keyword_missing": "Description keyword missing",
+                    "withholding_symbol_missing": "Withholding missing symbol"
+                }
+            ],
+            "message": [
+                {
+                    "description_keyword_missing": "Unknown keyword: ",
+                    "on": "on",
+                    "withholding_symbol_missing": "No symbol information on ",
+                    "th_row": "th row"
+                }
+            ]
+        }
+    ]
+}

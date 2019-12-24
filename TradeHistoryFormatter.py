@@ -17,19 +17,19 @@ from datetime import datetime, date, time
 #// TODO:實作介面語言字串全域變數
 sg.change_look_and_feel('Dark Blue 3')  # windows colorful
 
-# load program setting from setting.json
-def loadSetting():
+# load program setting from settings.json
+def loadSetting(setting_file_name = 'settings.json'):
     pass
 
-# edit program setting in setting.json
+# edit program setting in settings.json
 def editSetting():
     pass
 
-# save setting to setting.json
+# save setting to settings.json
 def saveSetting():
     pass
 
-# load GUI langage from lang.json
+# load langage from lang.json
 def loadLang(langCode):
     langString = 0
     return langString
@@ -47,7 +47,7 @@ def setWindow(langString):
               [sg.Text('File' + ':', justification='right'), sg.InputText('', key = 'it_filePath'), sg.FileBrowse(file_types=(("Spreadsheet Files", "*.xls"),("Spreadsheet Files", "*.xlsx"),)), sg.Button('Load File')],
               [sg.Text('Result' + ':'), sg.Text('', size=(20, 1), key='loadingResult')],
               [sg.Text('_' * 100, size=(70, 1))],
-              [sg.Button('Update History'), sg.Button('Exit')],
+              [sg.Button('Process History'), sg.Button('Exit')],
               [sg.Text('Result' + ':'), sg.Text('', size=(20,1), key='Result')]]
     # rendering window
     window = sg.Window('Trade History Formatter', auto_size_text=True, default_element_size=(40, 10), resizable=False).Layout(layout)
@@ -104,7 +104,7 @@ def excelProcessor(fileName, symbol_list = []):
         temp_date_for_sheet = datetime.strptime(tr_date.value, "%m/%d/%Y")
         date_for_sheet = temp_date_for_sheet.strftime("%Y/%m/%d")
         tr_description = ws_tran.cell(i, 3)
-        tr_quan = ws_tran.cell(i, 4)
+        tr_qty = ws_tran.cell(i, 4)
         tr_symbol = ws_tran.cell(i, 5)        
         tr_price = ws_tran.cell(i, 6)
         tr_fee = ws_tran.cell(i, 7)
@@ -142,7 +142,7 @@ def excelProcessor(fileName, symbol_list = []):
                 ws_STH.insert_rows(3)  # add new row                           
                 ws_STH.cell(3, 1).value = date_for_sheet # date     
                 iter_date_STH = tr_date.value
-            ws_STH.cell(3, symbol_index*4+2).value = tr_quan.value
+            ws_STH.cell(3, symbol_index*4+2).value = tr_qty.value
             ws_STH.cell(3, symbol_index*4+3).value = tr_price.value
             ws_STH.cell(3, symbol_index*4+4).value = tr_fee.value
             ws_STH.cell(3, symbol_index*4+5).value = tr_amount.value
@@ -171,7 +171,6 @@ def excelProcessor(fileName, symbol_list = []):
                 ws_W8.cell(2, symbol_index+2).value = tr_amount.value
         #// TODO: 待確認以下關鍵字：出金
         else:
-            #// TODO: 實作輸出log檔功能
             ws_log.insert_rows(2)
             ws_log.cell(2, 1).value = 'Description keyword missing'
             ws_log.cell(2, 2).value = 'not in the known keyword: ' + tr_description.value + ' on '+ str(i) + 'th row'
