@@ -3,7 +3,8 @@ import time
 import datetime
 import shutil
 import PySimpleGUI as sg
-from openpyxl import load_workbook
+from openpyxl import load_workbook, utils
+from openpyxl.styles import PatternFill, Alignment
 # import openpyxl.worksheet
 import ctypes
 from datetime import datetime, date, time
@@ -11,6 +12,7 @@ from datetime import datetime, date, time
 # openpyxl.utils.cell.coordinate_from_string('B3')  // ('B', 3)
 # openpyxl.utils.cell.column_index_from_string(a[0])  // 2
 # openpyxl.utils.cell.coordinate_to_tuple('B3')  // (3, 2)
+# openpyxl.utils.cell.get_column_letter(3) // C
 
 #// TODO:實作介面語言字串全域變數
 sg.change_look_and_feel('Dark Blue 3')  # windows colorful
@@ -108,17 +110,24 @@ def excelProcessor(fileName, symbol_list = []):
         tr_fee = ws_tran.cell(i, 7)
         tr_amount = ws_tran.cell(i, 8)
         # processing sheets format by stock symbols and gather all stock symbol from 'E5'
-        if not tr_symbol.value in symbol_list and tr_symbol.value != None:            
-            symbol_list.append(tr_symbol.value) # gather stock symbol
-            symbol_index = symbol_list.index(tr_symbol.value)
-            ws_STH.cell(1, symbol_index*4+2).value = tr_symbol.value  # stock symbol
+        if not tr_symbol.value in symbol_list and tr_symbol.value != None:
+            symbol_list.append(tr_symbol.value)  # gather stock symbol
+            symbol_index = symbol_list.index(tr_symbol.value)  # stock symbol
+            ws_STH.cell(1, symbol_index*4+2).value = tr_symbol.value
+            ws_STH.merge_cells(start_row=1, start_column=symbol_index *
+                               4+2, end_row=1, end_column=symbol_index*4+5)  # merge cell
+            ws_STH.cell(1, symbol_index*4+2).alignment = Alignment(
+                horizontal="center", vertical="center")  # centering text
             ws_STH.cell(2, symbol_index*4+2).value = 'Quantity'
             ws_STH.cell(2, symbol_index*4+3).value = 'Price'
             ws_STH.cell(2, symbol_index*4+4).value = 'Fee'
             ws_STH.cell(2, symbol_index*4+5).value = 'Amount'
-            # // TODO:待實作儲存格合併功能及顏色區別
             ws_OD.cell(1, symbol_index+2).value = tr_symbol.value
+            ws_OD.cell(1, symbol_index+2).alignment = Alignment(
+                horizontal="center", vertical="center")  # centering text
             ws_W8.cell(1, symbol_index+2).value = tr_symbol.value
+            ws_W8.cell(1, symbol_index+2).alignment = Alignment(
+                horizontal="center", vertical="center")  # centering text
             # print(tr_symbol.value)  # debug message
 
         # sorting trade history
@@ -182,6 +191,29 @@ def excelProcessor(fileName, symbol_list = []):
         ws_ver['B2'] = file_version
     fileNameRev = file + '_r' + str(file_version) + ext
     
+    # setting cell color
+    for k in range(len(symbol_list)):
+        color1 = "FFF2CC"
+        color2 = "E2EFDA"
+        if k % 2 == 0:
+            color_fill = color2
+        else:
+            color_fill = color1
+        for row in ws_STH.iter_rows(min_col=k*4+2, min_row=1, max_col=k*4+5, max_row=ws_STH.max_row):
+            for cell in row:
+                cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
+        for row in ws_OD.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_OD.max_row):
+            for cell in row:
+                cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
+        for row in ws_W8.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_W8.max_row):
+            for cell in row:
+                cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
+
+        # ws_OD.column_dimensions[utils.cell.get_column_letter(
+            # k+2)].fill = PatternFill(fgColor=color_fill, fill_type="solid")
+        # ws_W8.column_dimensions[utils.cell.get_column_letter(
+            # k+2)].fill = PatternFill(fgColor=color_fill, fill_type="solid")
+
     wb.save(fileNameRev)  # save processed file
     
 # Main Program
