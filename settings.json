@@ -1,34 +1,31 @@
-// This is all setting for program and excel format
 {
-    "general": [
-        {
-            "lang_setting": "en-US",
-            "avalible_lang": [
-                "en-US",
-                "zh-TW"
-            ],
-            "last_transaction_file_path": "",
-            "setting_file_path": "",
-            "exp_error_log": true
-        }
-    ],
-    "sheet_transactions": [
-        {
-            "row_pos_startToWrite": 3,
-            "col_pos_tr_date": 1,
-            "col_pos_tr_description": 3,
-            "col_pos_qty": 4,
-            "col_pos_symbol": 5,
-            "col_pos_price": 6,
-            "col_pos_fee": 7,
-            "col_pos_amount": 8
-        }
-    ],
-    "excel_format": [
-        {
-            "color_for_odd_column": "FFF2CC",
-            "color_for_even_column": "E2EFDA",
-            "display_date_format": "%Y%m%d"
-        }
-    ]
+    "general": {
+        "set_lang": "enUS",
+        "ava_lang": [
+            "enUS",
+            "zhTW"
+        ],
+        "ava_lang_code": [
+            "English (enUS)",
+            "繁體中文 台灣 (zhTW)"
+        ],
+        "last_transaction_file_path": "",
+        "setting_file_path": "",
+        "exp_error_log": true
+    },
+    "sht_trns": {
+        "row_pos_startToWrite": 3,
+        "col_pos_tr_date": 1,
+        "col_pos_tr_description": 3,
+        "col_pos_qty": 4,
+        "col_pos_symbol": 5,
+        "col_pos_price": 6,
+        "col_pos_fee": 7,
+        "col_pos_amount": 8
+    },
+    "xls_fmt": {
+        "color_for_odd_column": "FFF2CC",
+        "color_for_even_column": "E2EFDA",
+        "display_date_format": "%Y%m%d"
+    }
 }

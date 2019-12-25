@@ -8,6 +8,9 @@ from openpyxl.styles import PatternFill, Alignment
 # import openpyxl.worksheet
 import ctypes
 from datetime import datetime, date, time
+import json
+import settings
+import language
 
 # openpyxl.utils.cell.coordinate_from_string('B3')  // ('B', 3)
 # openpyxl.utils.cell.column_index_from_string(a[0])  // 2
@@ -18,8 +21,20 @@ from datetime import datetime, date, time
 sg.change_look_and_feel('Dark Blue 3')  # windows colorful
 
 # load program setting from settings.json
-def loadSetting(setting_file_name = 'settings.json'):
-    pass
+def loadSetting(setting_file_name='settings.json'):
+    """[load program setting from settings.json]
+    
+    Keyword Arguments:
+        setting_file_name {str} -- [setting file name] (default: {'settings.json'})
+    
+    Returns:
+        [type] -- [description]
+    """
+    # open json file and read
+    with open(setting_file_name, 'r', encoding="utf-8") as setting:
+        my_setting = json.loads(setting.read())
+
+    return settings.Thfset(my_setting)
 
 # edit program setting in settings.json
 def editSetting():
@@ -30,45 +45,52 @@ def saveSetting():
     pass
 
 # load langage from lang.json
-def loadLang(langCode):
-    langString = 0
-    return langString
+def loadLang(lang_code='enUS'):
+    lang_file_name = 'lang_' + lang_code + '.json'
+    # open json file and read
+    with open(lang_file_name, 'r', encoding="utf-8") as lang:
+        lang_setting = json.loads(lang.read())
+    return language.Lang(lang_setting)
 
 # setup window layout
-def setWindow(langString):
-    #// TODO: 實作載入目標語言字串
+def setWindow(lang):    
     #// TODO: 實作版本號介面
     #// TODO: 簡化或整合檔案載入及處理GUI介面
     # setup window layout
-    layout = [[sg.Text('Program Setting' + ':')],
-              [sg.FileBrowse('Load Setting File'), sg.Button('Open Setting Editor')],
+    layout = [[sg.Text(lang.gui_program_setting + ':')],
+              [sg.FileBrowse(lang.gui_load_setting_file),
+               sg.Button(lang.gui_open_setting_editor)],
               [sg.Text('_' * 100, size=(70, 1))],
-              [sg.Text('Load trade history file' + ':')],
-              [sg.Text('File' + ':', justification='right'), sg.InputText('', key = 'it_filePath'), sg.FileBrowse(file_types=(("Spreadsheet Files", "*.xls"),("Spreadsheet Files", "*.xlsx"),)), sg.Button('Load File')],
-              [sg.Text('Result' + ':'), sg.Text('', size=(20, 1), key='loadingResult')],
+              [sg.Text(lang.gui_load_trade_history_file + ':')],
+              [sg.Text(lang.gui_file + ':', justification='right'), sg.InputText('', key='it_filePath'), sg.FileBrowse(file_types=(
+                  (lang.gui_spreadsheet_files, "*.xls"), (lang.gui_spreadsheet_files, "*.xlsx"),)), sg.Button(lang.gui_load_file)],
+              [sg.Text(lang.gui_result + ':'), sg.Text('',
+                                                       size=(20, 1), key='loadingResult')],
               [sg.Text('_' * 100, size=(70, 1))],
-              [sg.Button('Process History'), sg.Button('Exit')],
-              [sg.Text('Result' + ':'), sg.Text('', size=(20,1), key='Result')]]
+              [sg.Button(lang.gui_process_history), sg.Button(lang.gui_exit)],
+              [sg.Text(lang.gui_result + ':'), sg.Text('', size=(20, 1), key='Result')]]
     # rendering window
-    window = sg.Window('Trade History Formatter', auto_size_text=True, default_element_size=(40, 10), resizable=False).Layout(layout)
+    window = sg.Window(lang.gui_title, auto_size_text=True, default_element_size=(
+        40, 10), resizable=False).Layout(layout)
     return window
 
 # load excel file to be processed
-def loadExcelFile(filePath):
-    fileName = os.path.basename(filePath)
+def loadExcelFile(filePath, lang):
+    xls_fileName = os.path.basename(filePath)
     os.chdir(os.path.dirname(filePath))
     MessageBox = ctypes.windll.user32.MessageBoxW
-    if not os.path.isfile(fileName):
+    if not os.path.isfile(xls_fileName):
         # sg.popup("File not exist!") # build-in pipup window
-        MessageBox(None, "File not exist!", "File Operation", 0)
+        MessageBox(None, lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
     else:        
-        return fileName
+        return xls_fileName
 
 # excel processor
-def excelProcessor(fileName, symbol_list = []):
+def excelProcessor(xls_fileName, symbol_list = []):
     sheet_list = ['Sorted trade history','ORDINARY DIVIDEND','W-8 WITHHOLDING','WIRING INFO','Ver','log']    
+    error_log_qty = 0
     # loading workbook
-    wb = load_workbook(fileName)
+    wb = load_workbook(xls_fileName)
     # create sheets
     for i in range(len(sheet_list)):
         if not sheet_list[i] in wb.sheetnames:
@@ -162,23 +184,25 @@ def excelProcessor(fileName, symbol_list = []):
                 ws_W8.insert_rows(2)  # add new row                           
                 ws_W8.cell(2, 1).value = date_for_sheet # date     
                 iter_date_W8 = tr_date.value
-            if tr_symbol.value == None:
+            if tr_symbol.value == None: # export error message
                 ws_log.insert_rows(2)
                 ws_log.cell(2, 1).value = 'WITHHOLDING'
                 ws_log.cell(2, 2).value = 'No symbol information on ' + str(i) + 'th row'
+                error_log_qty += 1
                 # ws_W8.cell(2, len(symbol_list)+2).value = tr_amount.value
             else:
                 ws_W8.cell(2, symbol_index+2).value = tr_amount.value
         #// TODO: 待確認以下關鍵字：出金
-        else:
+        else: # export error message
             ws_log.insert_rows(2)
             ws_log.cell(2, 1).value = 'Description keyword missing'
             ws_log.cell(2, 2).value = 'not in the known keyword: ' + tr_description.value + ' on '+ str(i) + 'th row'
+            error_log_qty += 1
             # print('not in the known keyword: ' + ws_tran.cell(i, 3).value)
 
     # version control
     file_version = ws_ver['B2'].value  # get current file version
-    [file, ext] = os.path.splitext(fileName)
+    [file, ext] = os.path.splitext(xls_fileName)
     if file_version == None:
         ws_ver['A2'] = date.today().strftime("%Y/%m/%d")  # date
         ws_ver['B2'] = 0
@@ -214,31 +238,34 @@ def excelProcessor(fileName, symbol_list = []):
             # k+2)].fill = PatternFill(fgColor=color_fill, fill_type="solid")
 
     wb.save(fileNameRev)  # save processed file
+    return error_log_qty
     
 # Main Program
-def main(window):
-    fileName = None
+def main(window, lang):
+    xls_fileName = None
     MessageBox = ctypes.windll.user32.MessageBoxW
     while True:
         event, values = window.Read()
         if event == 'Load File':
             if values['it_filePath'] is None or values['it_filePath'] == '':                
-                MessageBox(None, "Please select file first!", "File Operation", 0)
+                MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)
             else:
-                fileName = loadExcelFile(values['it_filePath'])
-                window.Element('loadingResult').Update('Success')  #showing loading result
+                xls_fileName = loadExcelFile(values['it_filePath'], lang)
+                window.Element('loadingResult').Update(lang.gui_sucess)  #showing loading result
         elif event == 'Load Setting File':
             #// TODO:實作載入設定檔
             pass
         elif event == 'Open Setting Editor':
             #// TODO:實作設定檔編輯功能
             pass
-        elif event == 'Update History':
-            if fileName is None or fileName == '':                
-                MessageBox(None, "Please select file first!", "File Operation", 0)
+        elif event == 'Process History':
+            if xls_fileName is None or xls_fileName == '':                
+                MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)
             else:
-                excelProcessor(fileName)                
-                window.Element('Result').Update('Success')  #showing process result
+                error_qty = excelProcessor(xls_fileName)                
+                if error_qty != 0:
+                    MessageBox(None, str(error_qty) + lang.log_msg_found_error, lang.msg_box_file_op_title, 0)
+                window.Element('Result').Update(lang.gui_sucess)  #showing process result
         elif event is None or event == 'Exit':
             break
         print('event: ', event, '\nvalues:', values)  # debug message
@@ -247,7 +274,8 @@ def main(window):
     window.Close()
 
 if __name__ == '__main__':
-    loadSetting()
-    lang = loadLang('default')
+    #// TODO:待實作設定檔存在與否檢查功能
+    st = loadSetting(setting_file_name='settings.json')
+    lang = loadLang(st.gen_set_lang)
     window = setWindow(lang)
-    main(window)
+    main(window, lang)
