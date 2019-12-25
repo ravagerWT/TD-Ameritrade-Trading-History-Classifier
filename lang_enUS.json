@@ -12,7 +12,7 @@
         "result": "Result",
         "process_history": "Process History",
         "exit": "Exit",
-        "sucess": "Sucess",
+        "success": "Success",
         "fail": "Failed"
     },
     "msg_box": {

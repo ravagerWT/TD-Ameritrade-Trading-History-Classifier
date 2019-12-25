@@ -251,7 +251,7 @@ def main(window, lang):
                 MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)
             else:
                 xls_fileName = loadExcelFile(values['it_filePath'], lang)
-                window.Element('loadingResult').Update(lang.gui_sucess)  #showing loading result
+                window.Element('loadingResult').Update(lang.gui_success)  #showing loading result
         elif event == 'Load Setting File':
             #// TODO:實作載入設定檔
             pass
@@ -265,7 +265,7 @@ def main(window, lang):
                 error_qty = excelProcessor(xls_fileName)                
                 if error_qty != 0:
                     MessageBox(None, str(error_qty) + lang.log_msg_found_error, lang.msg_box_file_op_title, 0)
-                window.Element('Result').Update(lang.gui_sucess)  #showing process result
+                window.Element('Result').Update(lang.gui_success)  #showing process result
         elif event is None or event == 'Exit':
             break
         print('event: ', event, '\nvalues:', values)  # debug message

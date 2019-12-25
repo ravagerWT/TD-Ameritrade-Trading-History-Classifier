@@ -18,7 +18,7 @@ class Lang:
         self.gui_result = data['GUI']['result']
         self.gui_process_history = data['GUI']['process_history']
         self.gui_exit = data['GUI']['exit']
-        self.gui_sucess = data['GUI']['sucess']
+        self.gui_success = data['GUI']['success']
         self.gui_fail = data['GUI']['fail']
 
         self.msg_box_file_op_title = data['msg_box']['file_op_title']
