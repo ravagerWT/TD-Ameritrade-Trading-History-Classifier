@@ -78,11 +78,11 @@ def setWindow(lang):
 # load excel file to be processed
 def loadExcelFile(filePath, lang):
     xls_fileName = os.path.basename(filePath)
-    os.chdir(os.path.dirname(filePath))
-    MessageBox = ctypes.windll.user32.MessageBoxW
+    os.chdir(os.path.dirname(filePath))    
     if not os.path.isfile(xls_fileName):
         # sg.popup("File not exist!") # build-in pipup window
         MessageBox(None, lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
+        return None
     else:        
         return xls_fileName
 
@@ -244,14 +244,15 @@ def excelProcessor(xls_fileName, symbol_list = []):
 # Main Program
 def main(window, lang):
     xls_fileName = None
-    MessageBox = ctypes.windll.user32.MessageBoxW
     while True:
         event, values = window.Read()
         if event == 'Load File':
-            if values['it_filePath'] is None or values['it_filePath'] == '':                
+            xls_fileName = loadExcelFile(values['it_filePath'], lang)
+            if values['it_filePath'] is None or values['it_filePath'] == '':
                 MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)
+            elif xls_fileName == None:
+                window.Element('loadingResult').Update(lang.gui_fail)  #showing loading result
             else:
-                xls_fileName = loadExcelFile(values['it_filePath'], lang)
                 window.Element('loadingResult').Update(lang.gui_success)  #showing loading result
         elif event == 'Load Setting File':
             #// TODO:實作載入設定檔
@@ -260,7 +261,7 @@ def main(window, lang):
             #// TODO:實作設定檔編輯功能
             pass
         elif event == 'Process History':
-            if xls_fileName is None or xls_fileName == '':                
+            if xls_fileName is None or xls_fileName == '':         
                 MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)
             else:
                 error_qty = excelProcessor(xls_fileName)                
@@ -276,6 +277,7 @@ def main(window, lang):
 
 if __name__ == '__main__':
     sg.change_look_and_feel('Dark Blue 3')  # windows colorful
+    MessageBox = ctypes.windll.user32.MessageBoxW
     #// TODO:待實作設定檔存在與否檢查功能
     st = loadSetting(setting_file_name='settings.json')
     lang = loadLang(st.gen_set_lang)
