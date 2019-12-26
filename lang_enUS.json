@@ -13,7 +13,8 @@
         "process_history": "Process History",
         "exit": "Exit",
         "success": "Success",
-        "fail": "Failed"
+        "fail": "Failed",
+        "ver": "Ver"
     },
     "msg_box": {
         "file_op_title": "File Operation",

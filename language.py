@@ -20,6 +20,7 @@ class Lang:
         self.gui_exit = data['GUI']['exit']
         self.gui_success = data['GUI']['success']
         self.gui_fail = data['GUI']['fail']
+        self.gui_ver = data['GUI']['ver']
 
         self.msg_box_file_op_title = data['msg_box']['file_op_title']
         self.msg_box_file_not_exist = data['msg_box']['file_not_exist']

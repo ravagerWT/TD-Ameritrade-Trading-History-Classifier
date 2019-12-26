@@ -17,9 +17,9 @@ import language
 # openpyxl.utils.cell.coordinate_to_tuple('B3')  // (3, 2)
 # openpyxl.utils.cell.get_column_letter(3) // C
 
-#// TODO:實作介面語言字串全域變數
-sg.change_look_and_feel('Dark Blue 3')  # windows colorful
+program_ver = 'Dev 1.0'
 
+#// TODO:實作介面語言字串全域變數
 # load program setting from settings.json
 def loadSetting(setting_file_name='settings.json'):
     """[load program setting from settings.json]
@@ -54,7 +54,6 @@ def loadLang(lang_code='enUS'):
 
 # setup window layout
 def setWindow(lang):    
-    #// TODO: 實作版本號介面
     #// TODO: 簡化或整合檔案載入及處理GUI介面
     # setup window layout
     layout = [[sg.Text(lang.gui_program_setting + ':')],
@@ -68,7 +67,9 @@ def setWindow(lang):
                                                        size=(20, 1), key='loadingResult')],
               [sg.Text('_' * 100, size=(70, 1))],
               [sg.Button(lang.gui_process_history), sg.Button(lang.gui_exit)],
-              [sg.Text(lang.gui_result + ':'), sg.Text('', size=(20, 1), key='Result')]]
+              [sg.Text(lang.gui_result + ':'), sg.Text('', size=(20, 1), key='Result'),
+               sg.Text(lang.gui_ver + ': ' + program_ver, size=(56, 1), font='Arial 8', justification='right')]]
+
     # rendering window
     window = sg.Window(lang.gui_title, auto_size_text=True, default_element_size=(
         40, 10), resizable=False).Layout(layout)
@@ -274,6 +275,7 @@ def main(window, lang):
     window.Close()
 
 if __name__ == '__main__':
+    sg.change_look_and_feel('Dark Blue 3')  # windows colorful
     #// TODO:待實作設定檔存在與否檢查功能
     st = loadSetting(setting_file_name='settings.json')
     lang = loadLang(st.gen_set_lang)
