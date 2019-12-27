@@ -57,21 +57,19 @@ def setWindow(lang):
     #// TODO: 簡化或整合檔案載入及處理GUI介面
     # setup window layout
     layout = [[sg.Text(lang.gui_program_setting + ':')],
-              [sg.FileBrowse(lang.gui_load_setting_file, enable_events=True),
-               sg.Button(lang.gui_open_setting_editor)],
+              [sg.FileBrowse(lang.gui_load_setting_file),
+               sg.Button(lang.gui_open_setting_editor, key='Open Setting Editor')],
               [sg.Text('_' * 100, size=(70, 1))],
               [sg.Text(lang.gui_load_trade_history_file + ':')],
-              [sg.Text(lang.gui_file + ':', justification='right'), sg.Text('',size=(70,1), key='it_filePath')],
-            #   [sg.Text(lang.gui_result + ':'), sg.Text('',
-            #                                            size=(20, 1), key='loadingResult')],
-              #   [sg.Text('_' * 100, size=(70, 1))],
+              [sg.Text(lang.gui_file + ':', justification='right'),
+               sg.Text('', size=(65, 1), key='it_filePath')],
               [sg.FileBrowse(file_types=((lang.gui_spreadsheet_files, "*.xls"),
-                                         (lang.gui_spreadsheet_files, "*.xlsx"),), enable_events=True), sg.Button(lang.gui_process_history)],
+                                         (lang.gui_spreadsheet_files, "*.xlsx"),), target='it_filePath'), sg.Button(lang.gui_process_history, key='Process History')],
               [sg.Text(lang.gui_result + ':'),
                sg.Text('', size=(20, 1), key='Result')],
               [sg.Text('_' * 100, size=(70, 1))],
               [sg.Text(lang.gui_ver + ': ' + program_ver, size=(80, 1), font='Arial 8'),
-              sg.Button(lang.gui_exit, size=(5,1))]]
+               sg.Button(lang.gui_exit, size=(5, 1), key='Exit')]]
 
     # rendering window
     window = sg.Window(lang.gui_title, auto_size_text=True, default_element_size=(
@@ -81,7 +79,7 @@ def setWindow(lang):
 # load excel file to be processed
 def loadExcelFile(filePath, lang):
     xls_fileName = os.path.basename(filePath)
-    # // TODO:檔案路徑檢查
+    #// TODO:待實作檔案路徑檢查
     os.chdir(os.path.dirname(filePath))    
     if not os.path.isfile(xls_fileName):
         # sg.popup("File not exist!") # build-in pipup window
@@ -250,22 +248,14 @@ def main(window, lang):
     xls_fileName = None
     while True:
         event, values = window.Read()
-        # if event == 'Load File':
-        #     xls_fileName = loadExcelFile(values['it_filePath'], lang)
-        #     if values['it_filePath'] is None or values['it_filePath'] == '':
-        #         MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)
-        #     elif xls_fileName == None:
-        #         window.Element('loadingResult').Update(lang.gui_fail)  #showing loading result
-        #     else:
-        #         window.Element('loadingResult').Update(lang.gui_success)  #showing loading result
         if event == 'Load Setting File':
             #// TODO:實作載入設定檔
             pass
         elif event == 'Open Setting Editor':
             #// TODO:實作設定檔編輯功能
-            pass        
+            pass
         elif event == 'Process History':
-            # // TODO:檔案名稱檢查
+            #// TODO:待實作檔案名稱檢查
             xls_fileName = loadExcelFile(values['Browse'], lang)
             if xls_fileName is None or xls_fileName == '':         
                 MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)
@@ -276,7 +266,6 @@ def main(window, lang):
                 window.Element('Result').Update(lang.gui_success)  #showing process result
         elif event is None or event == 'Exit':
             break        
-        # event, values = window.Read()
         print('event: ', event, '\nvalues:', values)  # debug message
 
     window.Close()
