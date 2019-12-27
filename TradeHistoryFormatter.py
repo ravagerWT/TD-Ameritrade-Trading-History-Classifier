@@ -253,9 +253,11 @@ def main(window, lang):
     xls_fileName = None    
     while True:
         event, values = window.Read()
+        print('event: ', event, '\nvalues:', values)  # debug message
         if event == 'Apply Settings':            
-            #// TODO:實作載入設定檔
-            pass
+            #// TODO:待實作載入設定檔
+            window.Close()
+            return True            
         elif event == 'Open Setting Editor':
             #// TODO:實作設定檔編輯功能
             pass
@@ -274,16 +276,15 @@ def main(window, lang):
                         MessageBox(None, str(error_qty) + lang.log_msg_found_error, lang.msg_box_file_op_title, 0)
                     window.Element('Result').Update(lang.gui_success)  #showing process result
         elif event is None or event == 'Exit':
-            break        
-        print('event: ', event, '\nvalues:', values)  # debug message
-
-    window.Close()
+            window.Close()
+            return False
 
 if __name__ == '__main__':
+    continue_program = True
     sg.change_look_and_feel('Dark Blue 3')  # windows colorful
     MessageBox = ctypes.windll.user32.MessageBoxW
-    #// TODO:待實作設定檔存在與否檢查功能
-    st = loadSetting(setting_file_name='settings.json')
-    lang = loadLang(st.gen_set_lang)
-    window = setWindow(lang)
-    main(window, lang)
+    while continue_program:
+        st = loadSetting(setting_file_name='settings.json')
+        lang = loadLang(st.gen_set_lang)
+        window = setWindow(lang)
+        continue_program = main(window, lang)
