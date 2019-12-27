@@ -9,11 +9,14 @@ class Lang:
 
         self.gui_title = data['GUI']['title']
         self.gui_program_setting = data['GUI']['program_setting']
+        self.gui_setting_loaded = data['GUI']['setting_loaded']
         self.gui_load_setting_file = data['GUI']['load_setting_file']
+        self.gui_settings_file = data['GUI']['settings_file']
+        self.gui_apply_settings = data['GUI']['apply_settings']
         self.gui_open_setting_editor = data['GUI']['open_setting_editor']
         self.gui_load_trade_history_file = data['GUI']['load_trade_history_file']
         self.gui_file = data['GUI']['file']
-        self.gui_load_file = data['GUI']['load_file']
+        self.gui_load_file = data['GUI']['load_file'] # unused
         self.gui_spreadsheet_files = data['GUI']['spreadsheet_files']
         self.gui_result = data['GUI']['result']
         self.gui_process_history = data['GUI']['process_history']

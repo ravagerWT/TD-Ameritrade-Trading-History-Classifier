@@ -3,7 +3,10 @@
     "GUI": {
         "title": "Trade History Formatter",
         "program_setting": "Program Setting",
+        "setting_loaded":"Settings loaded!",
         "load_setting_file": "Load Setting File",
+        "settings_file":"Settings File",
+        "apply_settings":"Apply Settings",
         "open_setting_editor": "Open Setting Editor",
         "load_trade_history_file": "Load trade history file",
         "file": "File",

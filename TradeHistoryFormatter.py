@@ -30,11 +30,14 @@ def loadSetting(setting_file_name='settings.json'):
     Returns:
         [type] -- [description]
     """
-    # open json file and read
-    with open(setting_file_name, 'r', encoding="utf-8") as setting:
-        my_setting = json.loads(setting.read())
-
-    return settings.Thfset(my_setting)
+    try:
+        # open json file and read
+        with open(setting_file_name, 'r', encoding="utf-8") as setting:
+            my_setting = json.loads(setting.read())
+    except FileNotFoundError:
+        MessageBox(None, setting_file_name + ' ' + lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
+    else:
+        return settings.Thfset(my_setting)
 
 # edit program setting in settings.json
 def editSetting():
@@ -47,18 +50,22 @@ def saveSetting():
 # load langage from lang.json
 def loadLang(lang_code='enUS'):
     lang_file_name = 'lang_' + lang_code + '.json'
-    # open json file and read
-    with open(lang_file_name, 'r', encoding="utf-8") as lang:
-        lang_setting = json.loads(lang.read())
-    return language.Lang(lang_setting)
+    try:
+        # open json file and read
+        with open(lang_file_name, 'r', encoding="utf-8") as lang:
+            lang_setting = json.loads(lang.read())
+    except FileNotFoundError:
+        MessageBox(None, lang_file_name + ' ' + lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
+    else:
+        return language.Lang(lang_setting)
 
 # setup window layout
 def setWindow(lang):    
     #// TODO: 簡化或整合檔案載入及處理GUI介面
     # setup window layout
-    layout = [[sg.Text(lang.gui_program_setting + ':')],
-              [sg.FileBrowse(lang.gui_load_setting_file),
-               sg.Button(lang.gui_open_setting_editor, key='Open Setting Editor')],
+    layout = [[sg.Text(lang.gui_program_setting + ':'), sg.Text('', size=(20, 1), key='settings status')],
+              [sg.FileBrowse(lang.gui_load_setting_file, file_types=((lang.gui_settings_file, "settings.json"),)),
+                             sg.Button(lang.gui_apply_settings, key='Apply Settings'), sg.Button(lang.gui_open_setting_editor, key='Open Setting Editor')],
               [sg.Text('_' * 100, size=(70, 1))],
               [sg.Text(lang.gui_load_trade_history_file + ':')],
               [sg.Text(lang.gui_file + ':', justification='right'),
@@ -76,16 +83,14 @@ def setWindow(lang):
         40, 10), resizable=False).Layout(layout)
     return window
 
-# load excel file to be processed
-def loadExcelFile(filePath, lang):
-    xls_fileName = os.path.basename(filePath)
-    #// TODO:待實作檔案路徑檢查
-    os.chdir(os.path.dirname(filePath))    
-    if not os.path.isfile(xls_fileName):
-        # sg.popup("File not exist!") # build-in pipup window
-        MessageBox(None, lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
-        return None
-    else:        
+# get excel file name to be processed
+def getXlsFileName(filePath, lang):
+    if filePath == None or filePath == '':        
+        MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)
+        return 'PathError'                
+    else:
+        xls_fileName = os.path.basename(filePath)        
+        os.chdir(os.path.dirname(filePath))    
         return xls_fileName
 
 # excel processor
@@ -245,10 +250,10 @@ def excelProcessor(xls_fileName, symbol_list = []):
     
 # Main Program
 def main(window, lang):
-    xls_fileName = None
+    xls_fileName = None    
     while True:
         event, values = window.Read()
-        if event == 'Load Setting File':
+        if event == 'Apply Settings':            
             #// TODO:實作載入設定檔
             pass
         elif event == 'Open Setting Editor':
@@ -256,14 +261,18 @@ def main(window, lang):
             pass
         elif event == 'Process History':
             #// TODO:待實作檔案名稱檢查
-            xls_fileName = loadExcelFile(values['Browse'], lang)
-            if xls_fileName is None or xls_fileName == '':         
-                MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)
+            xls_fileName = getXlsFileName(values['Browse'], lang)
+            if xls_fileName == 'PathError':         
+                pass
             else:
-                error_qty = excelProcessor(xls_fileName)                
-                if error_qty != 0:
-                    MessageBox(None, str(error_qty) + lang.log_msg_found_error, lang.msg_box_file_op_title, 0)
-                window.Element('Result').Update(lang.gui_success)  #showing process result
+                if not os.path.isfile(xls_fileName):
+                    # sg.popup("File not exist!") # build-in pipup window
+                    MessageBox(None, xls_fileName + ' ' + lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
+                else:
+                    error_qty = excelProcessor(xls_fileName)                
+                    if error_qty != 0:
+                        MessageBox(None, str(error_qty) + lang.log_msg_found_error, lang.msg_box_file_op_title, 0)
+                    window.Element('Result').Update(lang.gui_success)  #showing process result
         elif event is None or event == 'Exit':
             break        
         print('event: ', event, '\nvalues:', values)  # debug message
