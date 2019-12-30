@@ -38,6 +38,8 @@ def loadSetting(setting_file_name='settings.json'):
         MessageBox(None, setting_file_name + ' ' + lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
     else:
         return settings.Thfset(my_setting)
+    finally:
+        setting.close()
 
 # edit program setting in settings.json
 def editSetting():
@@ -58,6 +60,8 @@ def loadLang(lang_code='enUS'):
         MessageBox(None, lang_file_name + ' ' + lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
     else:
         return language.Lang(lang_setting)
+    finally:
+        lang.close()
 
 # setup window layout
 def setWindow(lang, st):    
@@ -312,6 +316,7 @@ def main(window, lang):
                         MessageBox(None, str(error_qty) + lang.log_msg_found_error, lang.msg_box_file_op_title, 0)
                     window.Element('Result').Update(lang.gui_success)  #showing process result
         elif event == 'Last xls chkbox':
+            #// TODO:待實作記錄excel檔案位置功能
             st.gen_record_last_transaction_file = values['Last xls chkbox']
             st.gen_last_transaction_file_path = values['Browse']
             # print(st.gen_record_last_transaction_file, st.gen_last_transaction_file_path)

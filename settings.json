@@ -1,11 +1,11 @@
 {
     "general": {
         "set_lang": "enUS",
-        "ava_lang": [
+        "ava_lang_code": [
             "enUS",
             "zhTW"
         ],
-        "ava_lang_code": [
+        "ava_lang_for_GUI": [
             "English (enUS)",
             "繁體中文 台灣 (zhTW)"
         ],
