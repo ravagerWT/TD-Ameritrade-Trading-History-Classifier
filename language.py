@@ -20,6 +20,8 @@ class Lang:
         self.gui_spreadsheet_files = data['GUI']['spreadsheet_files']
         self.gui_result = data['GUI']['result']
         self.gui_process_history = data['GUI']['process_history']
+        self.gui_rem_last_xls_file = data['GUI']['rem_last_xls_file']
+        self.gui_exp_error_log = data['GUI']['exp_error_log']
         self.gui_exit = data['GUI']['exit']
         self.gui_success = data['GUI']['success']
         self.gui_fail = data['GUI']['fail']

@@ -73,8 +73,8 @@ def setWindow(lang, st):
               [sg.FileBrowse(file_types=((lang.gui_spreadsheet_files, "*.xls"),
                                          (lang.gui_spreadsheet_files, "*.xlsx"),), target='it_filePath'),
                sg.Button(lang.gui_process_history, key='Process History'), sg.Checkbox(
-                   'Remember last file location', enable_events=True, key='Last xls chkbox'),
-               sg.Checkbox('Export error log', default=st.gen_exp_error_log, enable_events=True, key='exp error log')],
+                   lang.gui_rem_last_xls_file, enable_events=True, key='Last xls chkbox'),
+               sg.Checkbox(lang.gui_exp_error_log, default=st.gen_exp_error_log, enable_events=True, key='exp error log')],
               [sg.Text(lang.gui_result + ':'),
                sg.Text('', size=(20, 1), key='Result')],
               [sg.Text('_' * 100, size=(70, 1))],
