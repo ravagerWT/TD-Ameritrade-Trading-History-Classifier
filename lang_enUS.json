@@ -3,10 +3,10 @@
     "GUI": {
         "title": "Trade History Formatter",
         "program_setting": "Program Setting",
-        "setting_loaded":"Settings loaded!",
+        "setting_loaded": "Settings loaded!",
         "load_setting_file": "Load Setting File",
-        "settings_file":"Settings File",
-        "apply_settings":"Apply Settings",
+        "settings_file": "Settings File",
+        "apply_settings": "Apply Settings",
         "open_setting_editor": "Open Setting Editor",
         "load_trade_history_file": "Load trade history file",
         "file": "File",
@@ -48,12 +48,14 @@
     "xls_error_log": {
         "event": {
             "description_keyword_missing": "Description keyword missing",
-            "withholding_symbol_missing": "Withholding missing symbol"
+            "withholding_symbol_missing": "Withholding missing symbol",
+            "transaction_symbol_missing": "transaction symbol missing"
         },
         "message": {
             "description_keyword_missing": "Unknown keyword: ",
             "on": "on",
             "withholding_symbol_missing": "No symbol information on ",
+            "transaction_symbol_missing": "not in symbol list: ",
             "th_row": "th row",
             "found_error": " errors found in excel, please check log sheet for detail information!"
         }

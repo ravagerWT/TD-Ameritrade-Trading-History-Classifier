@@ -5,13 +5,16 @@ class Thfset:
 
     def __init__(self, data) -> None:
 
+        # program general settings
         self.gen_set_lang = data['general']['set_lang']
         self.gen_ava_lang = data['general']['ava_lang']
         self.gen_ava_lang_code = data['general']['ava_lang_code']
+        self.gen_record_last_transaction_file = data['general']['record_last_transaction_file']
         self.gen_last_transaction_file_path = data['general']['last_transaction_file_path']
         self.gen_setting_file_path = data['general']['setting_file_path']
         self.gen_exp_error_log = data['general']['exp_error_log']
 
+        # excel sheets position setting
         self.sht_trns_row_pos_startToWrite = data['sht_trns']['row_pos_startToWrite']
         self.sht_trns_col_pos_tr_date = data['sht_trns']['col_pos_tr_date']
         self.sht_trns_col_pos_tr_description = data['sht_trns']['col_pos_tr_description']
@@ -21,6 +24,7 @@ class Thfset:
         self.sht_trns_col_pos_fee = data['sht_trns']['col_pos_fee']
         self.sht_trns_col_pos_amount = data['sht_trns']['col_pos_amount']
 
+        # excel format setting
         self.xls_fmt_color_for_odd_column = data['xls_fmt']['color_for_odd_column']
         self.xls_fmt_color_for_even_column = data['xls_fmt']['color_for_even_column']
         self.xls_fmt_display_date_format = data['xls_fmt']['display_date_format']

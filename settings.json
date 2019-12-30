@@ -9,6 +9,7 @@
             "English (enUS)",
             "繁體中文 台灣 (zhTW)"
         ],
+        "record_last_transaction_file": false,
         "last_transaction_file_path": "",
         "setting_file_path": "",
         "exp_error_log": true

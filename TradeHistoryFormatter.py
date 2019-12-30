@@ -44,7 +44,7 @@ def editSetting():
     pass
 
 # save setting to settings.json
-def saveSetting():
+def saveSetting(settings):
     pass
 
 # load langage from lang.json
@@ -60,18 +60,21 @@ def loadLang(lang_code='enUS'):
         return language.Lang(lang_setting)
 
 # setup window layout
-def setWindow(lang):    
+def setWindow(lang, st):    
     #// TODO: 簡化或整合檔案載入及處理GUI介面
     # setup window layout
     layout = [[sg.Text(lang.gui_program_setting + ':'), sg.Text('', size=(20, 1), key='settings status')],
               [sg.FileBrowse(lang.gui_load_setting_file, file_types=((lang.gui_settings_file, "settings.json"),)),
-                             sg.Button(lang.gui_apply_settings, key='Apply Settings'), sg.Button(lang.gui_open_setting_editor, key='Open Setting Editor')],
+               sg.Button(lang.gui_apply_settings, key='Apply Settings'), sg.Button(lang.gui_open_setting_editor, key='Open Setting Editor')],
               [sg.Text('_' * 100, size=(70, 1))],
               [sg.Text(lang.gui_load_trade_history_file + ':')],
               [sg.Text(lang.gui_file + ':', justification='right'),
                sg.Text('', size=(65, 1), key='it_filePath')],
               [sg.FileBrowse(file_types=((lang.gui_spreadsheet_files, "*.xls"),
-                                         (lang.gui_spreadsheet_files, "*.xlsx"),), target='it_filePath'), sg.Button(lang.gui_process_history, key='Process History')],
+                                         (lang.gui_spreadsheet_files, "*.xlsx"),), target='it_filePath'),
+               sg.Button(lang.gui_process_history, key='Process History'), sg.Checkbox(
+                   'Remember last file location', enable_events=True, key='Last xls chkbox'),
+               sg.Checkbox('Export error log', default=st.gen_exp_error_log, enable_events=True, key='exp error log')],
               [sg.Text(lang.gui_result + ':'),
                sg.Text('', size=(20, 1), key='Result')],
               [sg.Text('_' * 100, size=(70, 1))],
@@ -94,9 +97,11 @@ def getXlsFileName(filePath, lang):
         return xls_fileName
 
 # excel processor
-def excelProcessor(xls_fileName, symbol_list = []):
+def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
     sheet_list = ['Sorted trade history','ORDINARY DIVIDEND','W-8 WITHHOLDING','WIRING INFO','Ver','log']    
     error_log_qty = 0
+    if symbol_list == []: gather_symbol = True
+    else: gather_symbol = False
     # loading workbook
     wb = load_workbook(xls_fileName)
     # create sheets
@@ -140,25 +145,45 @@ def excelProcessor(xls_fileName, symbol_list = []):
         tr_fee = ws_tran.cell(i, 7)
         tr_amount = ws_tran.cell(i, 8)
         # processing sheets format by stock symbols and gather all stock symbol from 'E5'
-        if not tr_symbol.value in symbol_list and tr_symbol.value != None:
-            symbol_list.append(tr_symbol.value)  # gather stock symbol
-            symbol_index = symbol_list.index(tr_symbol.value)  # stock symbol
-            ws_STH.cell(1, symbol_index*4+2).value = tr_symbol.value
-            ws_STH.merge_cells(start_row=1, start_column=symbol_index *
-                               4+2, end_row=1, end_column=symbol_index*4+5)  # merge cell
-            ws_STH.cell(1, symbol_index*4+2).alignment = Alignment(
-                horizontal="center", vertical="center")  # centering text
-            ws_STH.cell(2, symbol_index*4+2).value = 'Quantity'
-            ws_STH.cell(2, symbol_index*4+3).value = 'Price'
-            ws_STH.cell(2, symbol_index*4+4).value = 'Fee'
-            ws_STH.cell(2, symbol_index*4+5).value = 'Amount'
-            ws_OD.cell(1, symbol_index+2).value = tr_symbol.value
-            ws_OD.cell(1, symbol_index+2).alignment = Alignment(
-                horizontal="center", vertical="center")  # centering text
-            ws_W8.cell(1, symbol_index+2).value = tr_symbol.value
-            ws_W8.cell(1, symbol_index+2).alignment = Alignment(
-                horizontal="center", vertical="center")  # centering text
-            # print(tr_symbol.value)  # debug message
+        if gather_symbol:
+            if not tr_symbol.value in symbol_list and tr_symbol.value != None:
+                symbol_list.append(tr_symbol.value)  # gather stock symbol
+                symbol_index = symbol_list.index(tr_symbol.value)  # stock symbol
+                ws_STH.cell(1, symbol_index*4+2).value = tr_symbol.value
+                ws_STH.merge_cells(start_row=1, start_column=symbol_index *
+                                4+2, end_row=1, end_column=symbol_index*4+5)  # merge cell
+                ws_STH.cell(1, symbol_index*4+2).alignment = Alignment(
+                    horizontal="center", vertical="center")  # centering text
+                ws_STH.cell(2, symbol_index*4+2).value = 'Quantity'
+                ws_STH.cell(2, symbol_index*4+3).value = 'Price'
+                ws_STH.cell(2, symbol_index*4+4).value = 'Fee'
+                ws_STH.cell(2, symbol_index*4+5).value = 'Amount'
+                ws_OD.cell(1, symbol_index+2).value = tr_symbol.value
+                ws_OD.cell(1, symbol_index+2).alignment = Alignment(
+                    horizontal="center", vertical="center")  # centering text
+                ws_W8.cell(1, symbol_index+2).value = tr_symbol.value
+                ws_W8.cell(1, symbol_index+2).alignment = Alignment(
+                    horizontal="center", vertical="center")  # centering text
+                # print(tr_symbol.value)  # debug message
+        else:
+            for i in range(len(symbol_list)):
+                symbol_index = symbol_list.index(tr_symbol.value)  # stock symbol
+                ws_STH.cell(1, symbol_index*4+2).value = tr_symbol.value
+                ws_STH.merge_cells(start_row=1, start_column=symbol_index *
+                                4+2, end_row=1, end_column=symbol_index*4+5)  # merge cell
+                ws_STH.cell(1, symbol_index*4+2).alignment = Alignment(
+                    horizontal="center", vertical="center")  # centering text
+                ws_STH.cell(2, symbol_index*4+2).value = 'Quantity'
+                ws_STH.cell(2, symbol_index*4+3).value = 'Price'
+                ws_STH.cell(2, symbol_index*4+4).value = 'Fee'
+                ws_STH.cell(2, symbol_index*4+5).value = 'Amount'
+                ws_OD.cell(1, symbol_index+2).value = tr_symbol.value
+                ws_OD.cell(1, symbol_index+2).alignment = Alignment(
+                    horizontal="center", vertical="center")  # centering text
+                ws_W8.cell(1, symbol_index+2).value = tr_symbol.value
+                ws_W8.cell(1, symbol_index+2).alignment = Alignment(
+                    horizontal="center", vertical="center")  # centering text
+                # print(tr_symbol.value)  # debug message
 
         # sorting trade history
         if 'WIRE INCOMING' in tr_description.value:
@@ -167,15 +192,22 @@ def excelProcessor(xls_fileName, symbol_list = []):
                 ws_WI.cell(2, 1).value = date_for_sheet  # date
                 ws_WI.cell(2, 2).value = tr_amount.value  # amount
         elif 'Bought' in tr_description.value:            
-            symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
-            if tr_date.value != iter_date_STH:
-                ws_STH.insert_rows(3)  # add new row                           
-                ws_STH.cell(3, 1).value = date_for_sheet # date     
-                iter_date_STH = tr_date.value
-            ws_STH.cell(3, symbol_index*4+2).value = tr_qty.value
-            ws_STH.cell(3, symbol_index*4+3).value = tr_price.value
-            ws_STH.cell(3, symbol_index*4+4).value = tr_fee.value
-            ws_STH.cell(3, symbol_index*4+5).value = tr_amount.value
+            if tr_symbol.value in symbol_list:
+                symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
+                if tr_date.value != iter_date_STH:
+                    ws_STH.insert_rows(3)  # add new row                           
+                    ws_STH.cell(3, 1).value = date_for_sheet # date     
+                    iter_date_STH = tr_date.value
+                ws_STH.cell(3, symbol_index*4+2).value = tr_qty.value
+                ws_STH.cell(3, symbol_index*4+3).value = tr_price.value
+                ws_STH.cell(3, symbol_index*4+4).value = tr_fee.value
+                ws_STH.cell(3, symbol_index*4+5).value = tr_amount.value
+            else: # export error message
+                if exp_error_log:
+                    ws_log.insert_rows(2)
+                    ws_log.cell(2, 1).value = 'transaction symbol missing'
+                    ws_log.cell(2, 2).value = 'not in symbol list: ' + tr_symbol.value + ' on '+ str(i) + 'th row'
+                    error_log_qty += 1
         #// TODO: 待確認關鍵字
         elif 'Sold' in tr_description.value:
             ws_STH.insert_rows(3)  # add new row
@@ -188,25 +220,27 @@ def excelProcessor(xls_fileName, symbol_list = []):
                 iter_date_OD = tr_date.value
             ws_OD.cell(2, symbol_index+2).value = tr_amount.value
         elif 'WITHHOLDING' in tr_description.value:            
-            if tr_date.value != iter_date_W8:
-                ws_W8.insert_rows(2)  # add new row                           
-                ws_W8.cell(2, 1).value = date_for_sheet # date     
-                iter_date_W8 = tr_date.value
             if tr_symbol.value == None: # export error message
-                ws_log.insert_rows(2)
-                ws_log.cell(2, 1).value = 'WITHHOLDING'
-                ws_log.cell(2, 2).value = 'No symbol information on ' + str(i) + 'th row'
-                error_log_qty += 1
-                # ws_W8.cell(2, len(symbol_list)+2).value = tr_amount.value
+                if exp_error_log:
+                    ws_log.insert_rows(2)
+                    ws_log.cell(2, 1).value = 'WITHHOLDING'
+                    ws_log.cell(2, 2).value = 'No symbol information on ' + str(i) + 'th row'
+                    error_log_qty += 1
+                    # ws_W8.cell(2, len(symbol_list)+2).value = tr_amount.value
             else:
+                if tr_date.value != iter_date_W8:
+                    ws_W8.insert_rows(2)  # add new row
+                    ws_W8.cell(2, 1).value = date_for_sheet  # date
+                    iter_date_W8 = tr_date.value
                 ws_W8.cell(2, symbol_index+2).value = tr_amount.value
         #// TODO: 待確認以下關鍵字：出金
         else: # export error message
-            ws_log.insert_rows(2)
-            ws_log.cell(2, 1).value = 'Description keyword missing'
-            ws_log.cell(2, 2).value = 'not in the known keyword: ' + tr_description.value + ' on '+ str(i) + 'th row'
-            error_log_qty += 1
-            # print('not in the known keyword: ' + ws_tran.cell(i, 3).value)
+            if exp_error_log:
+                ws_log.insert_rows(2)
+                ws_log.cell(2, 1).value = 'Description keyword missing'
+                ws_log.cell(2, 2).value = 'not in the known keyword: ' + tr_description.value + ' on '+ str(i) + 'th row'
+                error_log_qty += 1
+                # print('not in the known keyword: ' + ws_tran.cell(i, 3).value)
 
     # version control
     file_version = ws_ver['B2'].value  # get current file version
@@ -250,14 +284,16 @@ def excelProcessor(xls_fileName, symbol_list = []):
     
 # Main Program
 def main(window, lang):
-    xls_fileName = None    
+    xls_fileName = None
     while True:
         event, values = window.Read()
         print('event: ', event, '\nvalues:', values)  # debug message
         if event == 'Apply Settings':            
-            #// TODO:待實作載入設定檔
-            window.Close()
-            return True            
+            if values['Load Setting File'] == None or values['Load Setting File'] == '':
+                MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)
+            else:                                
+                window.Close()
+                return True
         elif event == 'Open Setting Editor':
             #// TODO:實作設定檔編輯功能
             pass
@@ -271,10 +307,16 @@ def main(window, lang):
                     # sg.popup("File not exist!") # build-in pipup window
                     MessageBox(None, xls_fileName + ' ' + lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
                 else:
-                    error_qty = excelProcessor(xls_fileName)                
+                    error_qty = excelProcessor(xls_fileName, values['exp error log'])                
                     if error_qty != 0:
                         MessageBox(None, str(error_qty) + lang.log_msg_found_error, lang.msg_box_file_op_title, 0)
                     window.Element('Result').Update(lang.gui_success)  #showing process result
+        elif event == 'Last xls chkbox':
+            st.gen_record_last_transaction_file = values['Last xls chkbox']
+            st.gen_last_transaction_file_path = values['Browse']
+            # print(st.gen_record_last_transaction_file, st.gen_last_transaction_file_path)
+            # print(type(st.gen_record_last_transaction_file))
+            saveSetting(st)
         elif event is None or event == 'Exit':
             window.Close()
             return False
@@ -286,5 +328,5 @@ if __name__ == '__main__':
     while continue_program:
         st = loadSetting(setting_file_name='settings.json')
         lang = loadLang(st.gen_set_lang)
-        window = setWindow(lang)
+        window = setWindow(lang, st)
         continue_program = main(window, lang)
