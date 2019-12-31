@@ -7,7 +7,6 @@ class Thfset:
 
         # program general settings
         self.gen_set_lang = data['general']['set_lang']
-        self.gen_ava_lang_code = data['general']['ava_lang_code']
         self.gen_ava_lang_for_GUI = data['general']['ava_lang_for_GUI']
         self.gen_record_last_transaction_file = data['general']['record_last_transaction_file']
         self.gen_last_transaction_file_path = data['general']['last_transaction_file_path']
@@ -30,6 +29,9 @@ class Thfset:
         # date format shall follow the instruction in https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
         self.xls_fmt_display_date_format = data['xls_fmt']['display_date_format']
 
+    def updateSettings(self):
+        pass
+
 
 if __name__ == '__main__':
     # open json file and read
@@ -38,5 +40,4 @@ if __name__ == '__main__':
 
     a = Thfset(lang_reader)
     print(a.gen_set_lang)
-    print(a.gen_ava_lang_for_GUI[1])
-    print(a.gen_ava_lang_code[1])
+    print(a.gen_ava_lang_for_GUI[1])    

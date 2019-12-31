@@ -8,6 +8,7 @@ from openpyxl.styles import PatternFill, Alignment
 # import openpyxl.worksheet
 import ctypes
 from datetime import datetime, date, time
+import re
 import json
 import settings
 import language
@@ -42,16 +43,58 @@ def loadSetting(setting_file_name='settings.json'):
         setting.close()
 
 # edit program setting in settings.json
-def editSetting():
-    pass
+def editSetting(st, lang):
+    odd_color_status = False
+    even_color_status = False
+    layout = [
+        [sg.Text('Localization: '), sg.InputCombo(st.gen_ava_lang_for_GUI, size=(
+            20, 1), default_value=st.gen_set_lang, key='set_lang', readonly=True)],
+        [sg.Text('_' * 100, size=(55, 1))],
+        [sg.Text('Excel format setting: ')],
+        [sg.Text('Odd column color (Hex):', size=(18, 1)), sg.InputText('FFF2CC', key='odd_col_color')],
+        [sg.Text('Even column color (Hex):', size=(18, 1)), sg.InputText('E2EFDA', key='even_col_color')],
+        [sg.Text('Display date format:', size=(18, 1)), sg.InputText(st.xls_fmt_display_date_format, key='date_fmt')],
+        [sg.Button('OK'), sg.Cancel('Cancel')]
+    ]
+    
+    window = sg.Window('Program Settings', auto_size_text=True,
+                   default_element_size=(40, 10)).Layout(layout)
+
+    while True:
+        event, values = window.Read()
+        print('event: ', event, '\nvalues:', values)  # debug message
+        if event == 'OK':
+            # https://stackoverflow.com/questions/30241375/python-how-to-check-if-string-is-a-hex-color-code
+            if re.search(r'^(?:[0-9a-fA-F]{3}){1,2}$', values['odd_col_color']):
+                st.gen_set_lang = values['odd_col_color']
+                odd_color_status = True
+            else:
+                window.Element('odd_col_color').Update('Wrong')
+                MessageBox(None, 'Odd column color format is worng',
+                           'Color Format Wrong', 0)
+            if re.search(r'^(?:[0-9a-fA-F]{3}){1,2}$', values['even_col_color']):
+                st.gen_set_lang = values['even_col_color']
+                even_color_status = True
+            else:
+                window.Element('even_col_color').Update('Wrong')
+                MessageBox(None, 'Even column color format is worng',
+                           'Color Format Wrong', 0)
+            if odd_color_status and even_color_status:
+                # // TODO:待實作設定檔儲存功能
+                saveSetting(st)
+                break
+        elif event is None or event == 'Cancel':
+            break
+
+    window.close()
 
 # save setting to settings.json
 def saveSetting(settings):
     pass
 
 # load langage from lang.json
-def loadLang(lang_code='enUS'):
-    lang_file_name = 'lang_' + lang_code + '.json'
+def loadLang(lang_code='English (enUS)'):
+    lang_file_name = 'lang_' + st.gen_set_lang[-5:-1] + '.json'
     try:
         # open json file and read
         with open(lang_file_name, 'r', encoding="utf-8") as lang:
@@ -300,7 +343,7 @@ def main(window, lang):
                 return True
         elif event == 'Open Setting Editor':
             #// TODO:實作設定檔編輯功能
-            pass
+            editSetting(st, lang)
         elif event == 'Process History':
             #// TODO:待實作檔案名稱檢查
             xls_fileName = getXlsFileName(values['Browse'], lang)
