@@ -278,7 +278,8 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 if exp_error_log:
                     ws_log.insert_rows(2)
                     ws_log.cell(2, 1).value = lang.log_evt_transaction_symbol_missing
-                    ws_log.cell(2, 2).value = lang.log_msg_transaction_symbol_missing + tr_symbol.value + ' ' + lang.log_msg_on + ' ' + str(i) + lang.log_msg_th_row
+                    temp_msg = lang.log_msg_transaction_symbol_missing
+                    ws_log.cell(2, 2).value = (temp_msg.replace('-symbol-', tr_symbol.value)).replace('-xx-', str(i))
                     error_log_qty += 1
         #// TODO: 待確認關鍵字
         elif 'Sold' in tr_description.value:
@@ -296,7 +297,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 if exp_error_log:
                     ws_log.insert_rows(2)
                     ws_log.cell(2, 1).value = 'WITHHOLDING'
-                    ws_log.cell(2, 2).value = lang.log_msg_withholding_symbol_missing + str(i) + lang.log_msg_th_row
+                    ws_log.cell(2, 2).value = lang.log_msg_withholding_symbol_missing.replace('-xx-', str(i))
                     error_log_qty += 1
                     # ws_W8.cell(2, len(symbol_list)+2).value = tr_amount.value
             else:
@@ -310,7 +311,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             if exp_error_log:
                 ws_log.insert_rows(2)
                 ws_log.cell(2, 1).value = lang.log_evt_description_keyword_missing
-                ws_log.cell(2, 2).value = lang.log_msg_description_keyword_missing + tr_description.value + ' ' + lang.log_msg_on + ' ' + str(i) + lang.log_msg_th_row
+                ws_log.cell(2, 2).value = (lang.log_msg_description_keyword_missing.replace('-description-', tr_description.value)).replace('-xx-', str(i))
                 error_log_qty += 1
                 # print('not in the known keyword: ' + ws_tran.cell(i, 3).value)
 

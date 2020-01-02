@@ -68,13 +68,11 @@ class Lang:
             'xls_error_log']['event']['transaction_symbol_missing']
 
         self.log_msg_description_keyword_missing = data[
-            'xls_error_log']['message']['description_keyword_missing']
-        self.log_msg_on = data['xls_error_log']['message']['on']
+            'xls_error_log']['message']['description_keyword_missing']        
         self.log_msg_withholding_symbol_missing = data[
             'xls_error_log']['message']['withholding_symbol_missing']
         self.log_msg_transaction_symbol_missing = data[
-            'xls_error_log']['message']['transaction_symbol_missing']
-        self.log_msg_th_row = data['xls_error_log']['message']['th_row']
+            'xls_error_log']['message']['transaction_symbol_missing']        
         self.log_msg_found_error = data['xls_error_log']['message']['found_error']
 
 
