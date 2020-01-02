@@ -5,13 +5,20 @@ class Thfset:
 
     def __init__(self, data) -> None:
 
+        self.data = data
+
+        # setting version
+        self.ver_info_ver = data['ver_info']['ver']
+        self.ver_info_date = data['ver_info']['date']
+
         # program general settings
         self.gen_set_lang = data['general']['set_lang']
         self.gen_ava_lang_for_GUI = data['general']['ava_lang_for_GUI']
         self.gen_record_last_transaction_file = data['general']['record_last_transaction_file']
         self.gen_last_transaction_file_path = data['general']['last_transaction_file_path']
+        self.gen_setting_file_path = data['general']['setting_file_path']
+        self.gen_backup_setting = data['general']['backup_setting']
         self.gen_exp_error_log = data['general']['exp_error_log']
-        self.gen_setting_file_path = data['general']['setting_file_path']        
 
         # excel sheets position setting
         self.sht_trns_row_pos_startToWrite = data['sht_trns']['row_pos_startToWrite']
@@ -30,7 +37,25 @@ class Thfset:
         self.xls_fmt_display_date_format = data['xls_fmt']['display_date_format']
 
     def updateSettings(self):
-        pass
+        """[update setting instance]
+        
+        Returns:
+            [setting instance] {obj}
+        """        
+        self.data['ver_info']['ver'] = self.ver_info_ver
+        self.data['ver_info']['date'] = self.ver_info_date
+
+        self.data['general']['set_lang'] = self.gen_set_lang
+        self.data['general']['record_last_transaction_file'] = self.gen_record_last_transaction_file
+        self.data['general']['last_transaction_file_path'] = self.gen_last_transaction_file_path
+        self.data['general']['backup_setting'] = self.gen_backup_setting
+        self.data['general']['exp_error_log'] = self.gen_exp_error_log
+
+        self.data['xls_fmt']['color_for_odd_column'] = self.xls_fmt_color_for_odd_column
+        self.data['xls_fmt']['color_for_even_column'] = self.xls_fmt_color_for_even_column
+        self.data['xls_fmt']['display_date_format'] = self.xls_fmt_display_date_format
+
+        return self.data
 
 
 if __name__ == '__main__':
@@ -40,4 +65,5 @@ if __name__ == '__main__':
 
     a = Thfset(lang_reader)
     print(a.gen_set_lang)
-    print(a.gen_ava_lang_for_GUI[1])    
+    print(a.gen_ava_lang_for_GUI[1])
+    print(type(a.gen_ava_lang_for_GUI[1]))

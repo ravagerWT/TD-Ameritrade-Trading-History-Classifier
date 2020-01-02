@@ -1,4 +1,8 @@
 {
+    "ver_info": {
+        "ver": 0,
+        "date": "2020/01/02"
+    },
     "general": {
         "set_lang": "English (enUS)",
         "ava_lang_for_GUI": [
@@ -8,6 +12,7 @@
         "record_last_transaction_file": false,
         "last_transaction_file_path": "",
         "setting_file_path": "",
+        "backup_setting": true,
         "exp_error_log": true
     },
     "sht_trns": {

@@ -6,7 +6,7 @@ class Lang:
     def __init__(self, data) -> None:
 
         self.lang = data['lang']
-
+        # GUI
         self.gui_title = data['GUI']['title']
         self.gui_program_setting = data['GUI']['program_setting']
         self.gui_setting_loaded = data['GUI']['setting_loaded']
@@ -16,7 +16,7 @@ class Lang:
         self.gui_open_setting_editor = data['GUI']['open_setting_editor']
         self.gui_load_trade_history_file = data['GUI']['load_trade_history_file']
         self.gui_file = data['GUI']['file']
-        self.gui_load_file = data['GUI']['load_file'] # unused
+        self.gui_load_file = data['GUI']['load_file']  # unused
         self.gui_spreadsheet_files = data['GUI']['spreadsheet_files']
         self.gui_result = data['GUI']['result']
         self.gui_process_history = data['GUI']['process_history']
@@ -27,9 +27,25 @@ class Lang:
         self.gui_fail = data['GUI']['fail']
         self.gui_ver = data['GUI']['ver']
 
+        # GUI-settings
+        self.st_setting_window_title = data['settings']['setting_window_title']
+        self.st_localization = data['settings']['localization']
+        self.st_xls_fmt_setting = data['settings']['xls_fmt_setting']
+        self.st_odd_col_color = data['settings']['odd_col_color']
+        self.st_even_col_color = data['settings']['even_col_color']
+        self.st_disp_date_fmt = data['settings']['disp_date_fmt']
+        self.st_ok = data['settings']['ok']
+        self.st_cancel = data['settings']['cancel']
+        self.st_backup_settings = data['settings']['backup_settings']
+
+        # msg box
         self.msg_box_file_op_title = data['msg_box']['file_op_title']
         self.msg_box_file_not_exist = data['msg_box']['file_not_exist']
         self.msg_box_select_file_first = data['msg_box']['select_file_first']
+        self.msg_box_settings_file_not_change = data['msg_box']['settings_file_not_change']
+        self.msg_box_color_fmt_wrong_title = data['msg_box']['color_fmt_wrong_title']
+        self.msg_box_msg_odd_col_color_fmt = data['msg_box']['msg_odd_col_color_fmt']
+        self.msg_box_msg_even_col_color_fmt = data['msg_box']['msg_even_col_color_fmt']
 
         self.xls_sheet_names = data['excel']['sheet_names']  # list
 
@@ -65,7 +81,7 @@ if __name__ == '__main__':
     # open json file and read
     with open('lang_enUS.json', 'r', encoding="utf-8") as reader:
         data = json.loads(reader.read())
-    
+
     a = Lang(data)
     print(a.lang)
     print(a.gui_title)

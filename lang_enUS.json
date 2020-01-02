@@ -21,10 +21,25 @@
         "fail": "Failed",
         "ver": "Ver"
     },
+    "settings": {
+        "setting_window_title": "Program Settings",
+        "localization": "Localization: ",
+        "xls_fmt_setting": "Excel format setting: ",
+        "odd_col_color": "Odd column color (Hex):",
+        "even_col_color": "Even column color (Hex):",
+        "disp_date_fmt": "Display date format:",
+        "ok": "OK",
+        "cancel": "Cancel",
+        "backup_settings": "Backup settings"
+    },
     "msg_box": {
         "file_op_title": "File Operation",
         "file_not_exist": "File not exist!",
-        "select_file_first": "Please select file first!"
+        "select_file_first": "Please select file first!",
+        "settings_file_not_change": "The settings file has not changed!",
+        "color_fmt_wrong_title": "Color Format Wrong",
+        "msg_odd_col_color_fmt": "Odd column color format is worng",
+        "msg_even_col_color_fmt": "Even column color format is worng"
     },
     "excel": {
         "sheet_names": [
