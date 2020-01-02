@@ -1,14 +1,14 @@
 {
     "lang": "English (enUS)",
     "GUI": {
-        "title": "Trade History Formatter",
+        "title": "TD Ameritrade Trading History Classifier",
         "program_setting": "Program Setting",
         "setting_loaded": "Settings loaded!",
         "load_setting_file": "Load Setting File",
         "settings_file": "Settings File",
         "apply_settings": "Apply Settings",
         "open_setting_editor": "Open Setting Editor",
-        "load_trade_history_file": "Load trade history file",
+        "load_trade_history_file": "Load trading history file",
         "file": "File",
         "load_file": "Load File",
         "spreadsheet_files": "Spreadsheet Files",
@@ -43,10 +43,10 @@
     },
     "excel": {
         "sheet_names": [
-            "Sorted trade history",
+            "Sorted trading history",
             "ORDINARY DIVIDEND",
             "W-8 WITHHOLDING",
-            "WIRING INFO",
+            "WIRE TRANSFER INFO",
             "Ver",
             "log"
         ],
@@ -64,15 +64,15 @@
     },
     "xls_error_log": {
         "event": {
-            "description_keyword_missing": "Description keyword missing",
+            "description_keyword_missing": "Description error",
             "withholding_symbol_missing": "Withholding missing symbol",
-            "transaction_symbol_missing": "Transaction symbol missing"
+            "transaction_symbol_missing": "Transaction missing symbol"
         },
         "message": {
             "description_keyword_missing": "Unknown keyword: -symbol- on -xx-th row",
             "withholding_symbol_missing": "No symbol information on -xx-th row",
             "transaction_symbol_missing": "Not in symbol list: -description- on -xx-th row",
-            "found_error": " errors found in excel, please check log sheet for detail information!"
+            "found_error": "-xx- errors found in transactions file, please check log sheet for detail information!"
         }
     }
 }

@@ -1,0 +1,78 @@
+{
+    "lang": "繁體中文 台灣 (zhTW)",
+    "GUI": {
+        "title": "TD Ameritrade 交易記錄分類器",
+        "program_setting": "程式設定",
+        "setting_loaded": "設定已載入",
+        "load_setting_file": "載入設定檔",
+        "settings_file": "設定檔",
+        "apply_settings": "套用設定檔",
+        "open_setting_editor": "編輯設定檔",
+        "load_trade_history_file": "載入交易記錄",
+        "file": "檔案",
+        "load_file": "載入檔案",
+        "spreadsheet_files": "活頁簿檔案",
+        "result": "結果",
+        "process_history": "處理交易記錄",
+        "rem_last_xls_file": "記住交易記錄檔案位置",
+        "exp_error_log": "輸出錯誤記錄",
+        "exit": "結束",
+        "success": "成功",
+        "fail": "失敗",
+        "ver": "版本"
+    },
+    "settings": {
+        "setting_window_title": "程式設定",
+        "localization": "介面語言: ",
+        "xls_fmt_setting": "Excel格式設定: ",
+        "odd_col_color": "奇數欄位顏色 (Hex):",
+        "even_col_color": "偶數欄位顏色 (Hex):",
+        "disp_date_fmt": "顯示日期格式:",
+        "ok": "確定",
+        "cancel": "取消",
+        "backup_settings": "備份設定檔"
+    },
+    "msg_box": {
+        "file_op_title": "檔案操作",
+        "file_not_exist": "檔案不存在!",
+        "select_file_first": "請先選擇檔案!",
+        "settings_file_not_change": "設定檔並無改變!",
+        "color_fmt_wrong_title": "顏色格式錯誤",
+        "msg_odd_col_color_fmt": "奇數欄位顏色格式錯誤",
+        "msg_even_col_color_fmt": "偶數欄位顏色格式錯誤"
+    },
+    "excel": {
+        "sheet_names": [
+            "分類交易記錄",
+            "配息記錄",
+            "W-8 預扣稅記錄",
+            "電匯記錄",
+            "版本",
+            "日誌"
+        ],
+        "table_title": {
+            "date": "日期",
+            "quantity": "交易數量",
+            "symbol": "股票代碼",
+            "price": "價格",
+            "commission": "手續費",
+            "amount": "總額",
+            "ver": "版本",
+            "event": "事件",
+            "message": "訊息"
+        }
+    },
+    "xls_error_log": {
+        "event": {
+            "description_keyword_missing": "Description錯誤",
+            "withholding_symbol_missing": "Withholding missing symbol",
+            "transaction_symbol_missing": "Transaction symbol missing"
+        },
+        "message": {
+            "description_keyword_missing": "Unknown keyword: -symbol- on -xx-th row",
+            "withholding_symbol_missing": "No symbol information on -xx-th row",
+            "transaction_symbol_missing": "Not in symbol list: -description- on -xx-th row",
+            "found_error": "於交易記錄中發現-xx-個錯誤，請至日誌分頁中檢視詳細訊息!"
+        }
+    }
+}

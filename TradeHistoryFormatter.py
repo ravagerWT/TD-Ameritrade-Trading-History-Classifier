@@ -54,7 +54,7 @@ def editSetting(st, lang):
         [sg.Text(lang.st_odd_col_color, size=(18, 1)), sg.InputText(st.xls_fmt_color_for_odd_column, key='odd_col_color')],
         [sg.Text(lang.st_even_col_color, size=(18, 1)), sg.InputText(st.xls_fmt_color_for_even_column, key='even_col_color')],
         [sg.Text(lang.st_disp_date_fmt, size=(18, 1)), sg.InputText(st.xls_fmt_display_date_format, key='date_fmt')],        
-        [sg.Button(lang.st_ok), sg.Cancel(lang.st_cancel), sg.Checkbox(lang.st_backup_settings, default=st.gen_backup_setting, enable_events=True, key='backup_settings')]
+        [sg.Button(lang.st_ok, key='OK'), sg.Cancel(lang.st_cancel, key='Cancel'), sg.Checkbox(lang.st_backup_settings, default=st.gen_backup_setting, enable_events=True, key='backup_settings')]
     ]
     
     window = sg.Window(lang.st_setting_window_title, auto_size_text=True,
@@ -88,15 +88,16 @@ def editSetting(st, lang):
                 if odd_color_status and even_color_status:
                     st.gen_backup_setting = values['backup_settings']
                     saveSetting(st.updateSettings(), values['backup_settings'])
-                    break
+                    window.close()
+                    return True
             else:
                 MessageBox(None, lang.msg_box_settings_file_not_change,
                            lang.msg_box_file_op_title, 0)
-                break
+                window.close()
+                return False
         elif event is None or event == 'Cancel':
-            break
-
-    window.close()
+            window.close()
+            return False
 
 # save setting to settings.json
 def saveSetting(settings_obj, backup_settings=False, settings_file_name='settings.json'):
@@ -366,7 +367,9 @@ def main(window, st, lang):
                 window.Close()
                 return True
         elif event == 'Open Setting Editor':
-            editSetting(st, lang)
+            if editSetting(st, lang):
+                window.close()
+                return True
         elif event == 'Process History':
             xls_fileName = getXlsFileName(values['Browse'], lang)
             if xls_fileName == 'PathError':
@@ -378,7 +381,7 @@ def main(window, st, lang):
                 else:
                     error_qty = excelProcessor(xls_fileName, values['exp error log'], st, lang)                
                     if error_qty != 0:
-                        MessageBox(None, str(error_qty) + lang.log_msg_found_error, lang.msg_box_file_op_title, 0)
+                        MessageBox(None, lang.log_msg_found_error.replace('-xx-', str(error_qty)), lang.msg_box_file_op_title, 0)
                     window.Element('Result').Update(lang.gui_success)  #showing process result
         elif event == 'Last xls chkbox':
             #// TODO:待實作記錄excel檔案位置功能
