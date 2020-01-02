@@ -165,11 +165,14 @@ def getXlsFileName(filePath, lang):
 
 # excel processor
 # // TODO: 待實作套用語言及設定
-def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
-    sheet_list = ['Sorted trade history','ORDINARY DIVIDEND','W-8 WITHHOLDING','WIRING INFO','Ver','log']    
+def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
+    # sheet_list = ['Sorted trade history','ORDINARY DIVIDEND','W-8 WITHHOLDING','WIRING INFO','Ver','log']
+    sheet_list = lang.xls_sheet_names
     error_log_qty = 0
-    if symbol_list == []: gather_symbol = True
-    else: gather_symbol = False
+    if symbol_list == []:
+        gather_symbol = True
+    else:
+        gather_symbol = False
     # loading workbook
     wb = load_workbook(xls_fileName)
     # create sheets
@@ -178,23 +181,24 @@ def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
             wb.create_sheet(sheet_list[i])
     
     ws_tran = wb["transactions"]
-    ws_STH = wb["Sorted trade history"]
-    ws_OD = wb["ORDINARY DIVIDEND"]
-    ws_W8 = wb["W-8 WITHHOLDING"]
-    ws_WI = wb["WIRING INFO"]
-    ws_ver = wb["Ver"]
-    ws_log = wb["log"]
+    ws_STH = wb[sheet_list[0]]
+    ws_OD = wb[sheet_list[1]]
+    ws_W8 = wb[sheet_list[2]]
+    ws_WI = wb[sheet_list[3]]
+    ws_ver = wb[sheet_list[4]]
+    ws_log = wb[sheet_list[5]]
 
     # setting layout
-    ws_STH['A2'] = 'DATE' # Sorted trade history
-    ws_OD['A1'] = 'DATE' # ORDINARY DIVIDEND
-    ws_W8['A1'] = 'DATE' # W-8 WITHHOLDING
-    ws_WI['A1'] = 'DATE' # WIRING INFO
-    ws_WI['B1'] = 'Amount'
-    ws_ver['A1'] = 'DATE' # Ver
-    ws_ver['B1'] = 'Ver'
-    ws_log['A1'] = 'Event'
-    ws_log['B1'] = 'Message'
+    title_date = lang.xls_tt_date
+    ws_STH['A2'] = title_date # Sorted trade history
+    ws_OD['A1'] = title_date # ORDINARY DIVIDEND
+    ws_W8['A1'] = title_date # W-8 WITHHOLDING
+    ws_WI['A1'] = title_date # WIRING INFO
+    ws_WI['B1'] = lang.xls_tt_amount
+    ws_ver['A1'] = title_date # Ver
+    ws_ver['B1'] = lang.xls_tt_ver
+    ws_log['A1'] = lang.xls_tt_event
+    ws_log['B1'] = lang.xls_tt_msg
 
     # start sheets process
     iter_date_STH = ''
@@ -205,7 +209,7 @@ def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
         tr_date = ws_tran.cell(i, 1)
         # date process
         temp_date_for_sheet = datetime.strptime(tr_date.value, "%m/%d/%Y")
-        date_for_sheet = temp_date_for_sheet.strftime("%Y/%m/%d")
+        date_for_sheet = temp_date_for_sheet.strftime(st.xls_fmt_display_date_format)
         tr_description = ws_tran.cell(i, 3)
         tr_qty = ws_tran.cell(i, 4)
         tr_symbol = ws_tran.cell(i, 5)        
@@ -222,10 +226,10 @@ def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
                                 4+2, end_row=1, end_column=symbol_index*4+5)  # merge cell
                 ws_STH.cell(1, symbol_index*4+2).alignment = Alignment(
                     horizontal="center", vertical="center")  # centering text
-                ws_STH.cell(2, symbol_index*4+2).value = 'Quantity'
-                ws_STH.cell(2, symbol_index*4+3).value = 'Price'
-                ws_STH.cell(2, symbol_index*4+4).value = 'Fee'
-                ws_STH.cell(2, symbol_index*4+5).value = 'Amount'
+                ws_STH.cell(2, symbol_index*4+2).value = lang.xls_tt_quantity
+                ws_STH.cell(2, symbol_index*4+3).value = lang.xls_tt_price
+                ws_STH.cell(2, symbol_index*4+4).value = lang.xls_tt_commission
+                ws_STH.cell(2, symbol_index*4+5).value = lang.xls_tt_amount
                 ws_OD.cell(1, symbol_index+2).value = tr_symbol.value
                 ws_OD.cell(1, symbol_index+2).alignment = Alignment(
                     horizontal="center", vertical="center")  # centering text
@@ -241,10 +245,10 @@ def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
                                 4+2, end_row=1, end_column=symbol_index*4+5)  # merge cell
                 ws_STH.cell(1, symbol_index*4+2).alignment = Alignment(
                     horizontal="center", vertical="center")  # centering text
-                ws_STH.cell(2, symbol_index*4+2).value = 'Quantity'
-                ws_STH.cell(2, symbol_index*4+3).value = 'Price'
-                ws_STH.cell(2, symbol_index*4+4).value = 'Fee'
-                ws_STH.cell(2, symbol_index*4+5).value = 'Amount'
+                ws_STH.cell(2, symbol_index*4+2).value = lang.xls_tt_quantity
+                ws_STH.cell(2, symbol_index*4+3).value = lang.xls_tt_price
+                ws_STH.cell(2, symbol_index*4+4).value = lang.xls_tt_commission
+                ws_STH.cell(2, symbol_index*4+5).value = lang.xls_tt_amount
                 ws_OD.cell(1, symbol_index+2).value = tr_symbol.value
                 ws_OD.cell(1, symbol_index+2).alignment = Alignment(
                     horizontal="center", vertical="center")  # centering text
@@ -253,7 +257,7 @@ def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
                     horizontal="center", vertical="center")  # centering text
                 # print(tr_symbol.value)  # debug message
 
-        # sorting trade history
+        # sorting trade history by the description of transactions
         if 'WIRE INCOMING' in tr_description.value:
             if tr_date.value != iter_date_WI:
                 ws_WI.insert_rows(2)  # add new row
@@ -273,8 +277,8 @@ def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
             else: # export error message
                 if exp_error_log:
                     ws_log.insert_rows(2)
-                    ws_log.cell(2, 1).value = 'transaction symbol missing'
-                    ws_log.cell(2, 2).value = 'not in symbol list: ' + tr_symbol.value + ' on '+ str(i) + 'th row'
+                    ws_log.cell(2, 1).value = lang.log_evt_transaction_symbol_missing
+                    ws_log.cell(2, 2).value = lang.log_msg_transaction_symbol_missing + tr_symbol.value + ' ' + lang.log_msg_on + ' ' + str(i) + lang.log_msg_th_row
                     error_log_qty += 1
         #// TODO: 待確認關鍵字
         elif 'Sold' in tr_description.value:
@@ -292,7 +296,7 @@ def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
                 if exp_error_log:
                     ws_log.insert_rows(2)
                     ws_log.cell(2, 1).value = 'WITHHOLDING'
-                    ws_log.cell(2, 2).value = 'No symbol information on ' + str(i) + 'th row'
+                    ws_log.cell(2, 2).value = lang.log_msg_withholding_symbol_missing + str(i) + lang.log_msg_th_row
                     error_log_qty += 1
                     # ws_W8.cell(2, len(symbol_list)+2).value = tr_amount.value
             else:
@@ -305,8 +309,8 @@ def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
         else: # export error message
             if exp_error_log:
                 ws_log.insert_rows(2)
-                ws_log.cell(2, 1).value = 'Description keyword missing'
-                ws_log.cell(2, 2).value = 'not in the known keyword: ' + tr_description.value + ' on '+ str(i) + 'th row'
+                ws_log.cell(2, 1).value = lang.log_evt_description_keyword_missing
+                ws_log.cell(2, 2).value = lang.log_msg_description_keyword_missing + tr_description.value + ' ' + lang.log_msg_on + ' ' + str(i) + lang.log_msg_th_row
                 error_log_qty += 1
                 # print('not in the known keyword: ' + ws_tran.cell(i, 3).value)
 
@@ -326,12 +330,10 @@ def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
     
     # setting cell color
     for k in range(len(symbol_list)):
-        color1 = "FFF2CC"
-        color2 = "E2EFDA"
         if k % 2 == 0:
-            color_fill = color2
+            color_fill = st.xls_fmt_color_for_even_column
         else:
-            color_fill = color1
+            color_fill = st.xls_fmt_color_for_odd_column
         for row in ws_STH.iter_rows(min_col=k*4+2, min_row=1, max_col=k*4+5, max_row=ws_STH.max_row):
             for cell in row:
                 cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
@@ -351,7 +353,7 @@ def excelProcessor(xls_fileName, exp_error_log, symbol_list = []):
     return error_log_qty
     
 # Main Program
-def main(window, lang):
+def main(window, st, lang):
     xls_fileName = None
     while True:
         event, values = window.Read()
@@ -373,7 +375,7 @@ def main(window, lang):
                     # sg.popup("File not exist!") # build-in pipup window
                     MessageBox(None, xls_fileName + ' ' + lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
                 else:
-                    error_qty = excelProcessor(xls_fileName, values['exp error log'])                
+                    error_qty = excelProcessor(xls_fileName, values['exp error log'], st, lang)                
                     if error_qty != 0:
                         MessageBox(None, str(error_qty) + lang.log_msg_found_error, lang.msg_box_file_op_title, 0)
                     window.Element('Result').Update(lang.gui_success)  #showing process result
@@ -397,4 +399,4 @@ if __name__ == '__main__':
         lang = loadLang(st.gen_set_lang)
         window = setWindow(lang, st)
         # if setting have any changes, program will restart automatically
-        continue_program = main(window, lang)
+        continue_program = main(window, st, lang)

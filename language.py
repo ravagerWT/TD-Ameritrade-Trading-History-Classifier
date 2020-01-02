@@ -47,6 +47,7 @@ class Lang:
         self.msg_box_msg_odd_col_color_fmt = data['msg_box']['msg_odd_col_color_fmt']
         self.msg_box_msg_even_col_color_fmt = data['msg_box']['msg_even_col_color_fmt']
 
+        # Excel relate
         self.xls_sheet_names = data['excel']['sheet_names']  # list
 
         self.xls_tt_date = data['excel']['table_title']['date']
