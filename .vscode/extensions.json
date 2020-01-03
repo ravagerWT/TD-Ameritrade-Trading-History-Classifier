@@ -4,6 +4,7 @@
         "mhutchie.git-graph",
         "yzhang.markdown-all-in-one",
         "quicktype.quicktype",
-        "tzachovadia.todo-list"
+        "tzachovadia.todo-list",
+        "vscode-snippet.snippet"
     ]
 }

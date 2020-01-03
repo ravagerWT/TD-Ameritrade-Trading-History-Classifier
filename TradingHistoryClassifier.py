@@ -18,7 +18,7 @@ import language
 # openpyxl.utils.cell.coordinate_to_tuple('B3')  // (3, 2)
 # openpyxl.utils.cell.get_column_letter(3) // C
 
-program_ver = 'Dev 2.0'
+program_ver = 'Dev 20.3'
 
 # load program setting from settings.json
 def loadSetting(setting_file_name='settings.json'):
@@ -128,8 +128,7 @@ def loadLang(lang_code='English (enUS)'):
         lang.close()
 
 # setup window layout
-def setWindow(lang, st):    
-    #// TODO: 簡化或整合檔案載入及處理GUI介面
+def setWindow(lang, st):
     # setup window layout
     layout = [[sg.Text(lang.gui_program_setting + ':'), sg.Text('', size=(20, 1), key='settings status')],
               [sg.FileBrowse(lang.gui_load_setting_file, file_types=((lang.gui_settings_file, "settings.json"),)),
@@ -140,8 +139,7 @@ def setWindow(lang, st):
                sg.Text('', size=(65, 1), key='it_filePath')],
               [sg.FileBrowse(file_types=((lang.gui_spreadsheet_files, "*.xls"),
                                          (lang.gui_spreadsheet_files, "*.xlsx"),), target='it_filePath'),
-               sg.Button(lang.gui_process_history, key='Process History'), sg.Checkbox(
-                   lang.gui_rem_last_xls_file, enable_events=True, key='Last xls chkbox'),
+               sg.Button(lang.gui_process_history, key='Process History'),
                sg.Checkbox(lang.gui_exp_error_log, default=st.gen_exp_error_log, enable_events=True, key='exp error log')],
               [sg.Text(lang.gui_result + ':'),
                sg.Text('', size=(20, 1), key='Result')],
@@ -165,7 +163,6 @@ def getXlsFileName(filePath, lang):
         return xls_fileName
 
 # excel processor
-# // TODO: 待實作套用語言及設定
 def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
     # sheet_list = ['Sorted trade history','ORDINARY DIVIDEND','W-8 WITHHOLDING','WIRING INFO','Ver','log']
     sheet_list = lang.xls_sheet_names
@@ -383,13 +380,6 @@ def main(window, st, lang):
                     if error_qty != 0:
                         MessageBox(None, lang.log_msg_found_error.replace('-xx-', str(error_qty)), lang.msg_box_file_op_title, 0)
                     window.Element('Result').Update(lang.gui_success)  #showing process result
-        elif event == 'Last xls chkbox':
-            #// TODO:待實作記錄excel檔案位置功能
-            st.gen_record_last_transaction_file = values['Last xls chkbox']
-            st.gen_last_transaction_file_path = values['Browse']
-            # print(st.gen_record_last_transaction_file, st.gen_last_transaction_file_path)
-            # print(type(st.gen_record_last_transaction_file))
-            saveSetting(st, st.gen_backup_setting)
         elif event is None or event == 'Exit':
             window.Close()
             return False

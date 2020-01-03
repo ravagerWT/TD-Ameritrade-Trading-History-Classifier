@@ -14,13 +14,13 @@ class Thfset:
         # program general settings
         self.gen_set_lang = data['general']['set_lang']
         self.gen_ava_lang_for_GUI = data['general']['ava_lang_for_GUI']
-        self.gen_record_last_transaction_file = data['general']['record_last_transaction_file']
-        self.gen_last_transaction_file_path = data['general']['last_transaction_file_path']
-        self.gen_setting_file_path = data['general']['setting_file_path']
+        self.gen_record_last_transaction_file = data['general']['record_last_transaction_file'] # not used
+        self.gen_last_transaction_file_path = data['general']['last_transaction_file_path'] # not used
+        self.gen_setting_file_path = data['general']['setting_file_path'] # not used
         self.gen_backup_setting = data['general']['backup_setting']
         self.gen_exp_error_log = data['general']['exp_error_log']
 
-        # excel sheets position setting
+        # excel sheets position setting.  Currently not used.
         self.sht_trns_row_pos_startToWrite = data['sht_trns']['row_pos_startToWrite']
         self.sht_trns_col_pos_tr_date = data['sht_trns']['col_pos_tr_date']
         self.sht_trns_col_pos_tr_description = data['sht_trns']['col_pos_tr_description']
