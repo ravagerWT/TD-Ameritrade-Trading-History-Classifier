@@ -1,5 +1,7 @@
 # TD Ameritrade Trading History Classifier
 
+![](screenshot/Main%20GUI%20Beta1.0.jpg?raw=true)
+
 This python program help user easily classify the transactions history by symbol and account activity into several spreading sheets.
 
 ## Getting Started
