@@ -59,6 +59,9 @@ class Lang:
         self.xls_tt_ver = data['excel']['table_title']['ver']
         self.xls_tt_event = data['excel']['table_title']['event']
         self.xls_tt_msg = data['excel']['table_title']['message']
+        self.xls_tt_remark = data['excel']['table_title']['remark']
+
+        self.xls_msg_rebate = data['excel']['msg']['rebate']
 
         self.log_evt_description_keyword_missing = data[
             'xls_error_log']['event']['description_keyword_missing']

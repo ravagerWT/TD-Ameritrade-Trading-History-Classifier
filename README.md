@@ -64,6 +64,10 @@ Q: Could I add new trading history into processed spreadsheet file by this progr
 
 *A: Add new trading history into a existing processed file is not supported by current version.  You need to manually integrate them into existing spreadsheet file.*
 
+Q: How to change program interface language?
+
+*A: Click `Open Setting Editor` button and choose language for the interface.*
+
 ## ChangeLog
 
 Please see the [CHANGELOG.md](CHANGELOG.md) file for details.

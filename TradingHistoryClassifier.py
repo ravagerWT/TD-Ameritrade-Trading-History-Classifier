@@ -257,11 +257,17 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
 
         # sorting trade history by the description of transactions
         if 'WIRE INCOMING' in tr_description.value:
-            if tr_date.value != iter_date_WI:
-                ws_WI.insert_rows(2)  # add new row
-                ws_WI.cell(2, 1).value = date_for_sheet  # date
-                ws_WI.cell(2, 2).value = tr_amount.value  # amount
-        elif 'Bought' in tr_description.value:            
+            ws_WI.insert_rows(2)  # add new row
+            ws_WI.cell(2, 1).value = date_for_sheet  # date
+            ws_WI.cell(2, 2).value = tr_amount.value  # amount
+        elif 'REBATE' in tr_description.value:
+            ws_WI.insert_rows(2)  # add new row
+            ws_WI.cell(2, 1).value = date_for_sheet  # date
+            ws_WI.cell(2, 2).value = tr_amount.value  # amount
+            if ws_WI.cell(1, 3).value != None or ws_WI.cell(1,3).value != '':
+                ws_WI.cell(1, 3).value = lang.xls_tt_remark
+            ws_WI.cell(2, 3).value = lang.xls_msg_rebate
+        elif 'Bought' in tr_description.value or 'Sold' in tr_description.value:
             if tr_symbol.value in symbol_list:
                 symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
                 if tr_date.value != iter_date_STH:
@@ -279,10 +285,6 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                     temp_msg = lang.log_msg_transaction_symbol_missing
                     ws_log.cell(2, 2).value = (temp_msg.replace('-symbol-', tr_symbol.value)).replace('-xx-', str(i))
                     error_log_qty += 1
-        #// TODO: 待確認關鍵字
-        elif 'Sold' in tr_description.value:
-            ws_STH.insert_rows(3)  # add new row
-            pass
         elif 'ORDINARY DIVIDEND' in tr_description.value:
             symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
             if tr_date.value != iter_date_OD:
@@ -304,7 +306,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                     ws_W8.cell(2, 1).value = date_for_sheet  # date
                     iter_date_W8 = tr_date.value
                 ws_W8.cell(2, symbol_index+2).value = tr_amount.value
-        #// TODO: 待確認以下關鍵字：出金
+        #// TODO: The keyword for Withdrawal is unknown
         else: # export error message
             if exp_error_log:
                 ws_log.insert_rows(2)
