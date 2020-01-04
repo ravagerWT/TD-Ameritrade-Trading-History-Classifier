@@ -70,7 +70,7 @@ Q: How to change program interface language?
 
 ## ChangeLog
 
-Please see the [CHANGELOG.md](CHANGELOG.md) file for details.
+Please see the [CHANGELOG.md](https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier/blob/develop/CHANGELOG.md) file for details.
 
 ## Contributing
 
@@ -86,4 +86,4 @@ Please see the [CHANGELOG.md](CHANGELOG.md) file for details.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GPLv3 License - see the [LICENSE.md](https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier/blob/master/LICENSE.md) file for details.

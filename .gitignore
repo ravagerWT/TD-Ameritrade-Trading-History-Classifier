@@ -1,5 +1,5 @@
 __pycache__/*.*
-screenshot/*.jpg
+# screenshot/*.jpg
 *.xlsx
 *.xlsm
 *.csv
