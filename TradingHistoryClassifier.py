@@ -137,7 +137,7 @@ def setWindow(lang, st):
               [sg.Text(lang.gui_load_trade_history_file + ':')],
               [sg.Text(lang.gui_file + ':', justification='right'),
                sg.Text('', size=(65, 1), key='it_filePath')],
-              [sg.FileBrowse(file_types=((lang.gui_spreadsheet_files, "*.xls"),
+              [sg.FileBrowse(lang.gui_load_trade_history_file, file_types=((lang.gui_spreadsheet_files, "*.xls"),
                                          (lang.gui_spreadsheet_files, "*.xlsx"),), target='it_filePath'),
                sg.Button(lang.gui_process_history, key='Process History'),
                sg.Checkbox(lang.gui_exp_error_log, default=st.gen_exp_error_log, enable_events=True, key='exp error log')],
