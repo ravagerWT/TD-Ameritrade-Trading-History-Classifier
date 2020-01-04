@@ -58,11 +58,6 @@ Download project .zip file and extract it.
 
 1. Add new trading history into a existing processed file is not supported by current version.  You need to manually integrate them into existing spreadsheet file.
 
-## Release History
-
-* Beta 20.1
-    * First release
-
 ## Contributing
 
 1. Fork it (<https://github.com/yourname/yourproject/fork>)
@@ -73,9 +68,7 @@ Download project .zip file and extract it.
 
 ## Authors
 
-* **Your Name** - *Initial work* - [your-project-name](https://github.com/your-project-name)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **RavagerWT** - *Initial work* - [Trading-History-Classifier](https://github.com/your-project-name)
 
 ## License
 

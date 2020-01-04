@@ -18,7 +18,7 @@ import language
 # openpyxl.utils.cell.coordinate_to_tuple('B3')  // (3, 2)
 # openpyxl.utils.cell.get_column_letter(3) // C
 
-program_ver = 'Dev 20.3'
+program_ver = 'Beta 1.0'
 
 # load program setting from settings.json
 def loadSetting(setting_file_name='settings.json'):
