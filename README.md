@@ -38,8 +38,8 @@ Windows:
 **Step3. Get the program:**
 
 Clone this repo to your local machine using
-```
-git clone https://github.com/your_username_/Project-Name.git
+```git
+git clone https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier
 ```
 Or
 
@@ -56,11 +56,21 @@ Download project .zip file and extract it.
 
 ## FAQ
 
-1. Add new trading history into a existing processed file is not supported by current version.  You need to manually integrate them into existing spreadsheet file.
+Q: What environment does this program run?
+
+*A: I develop and test it under Windows 10, python 3.7.  You could try to run it under differnt environment, but I can't promise it will run smoothly.*
+
+Q: Could I add new trading history into processed spreadsheet file by this program?
+
+*A: Add new trading history into a existing processed file is not supported by current version.  You need to manually integrate them into existing spreadsheet file.*
+
+## ChangeLog
+
+Please see the [CHANGELOG.md](CHANGELOG.md) file for details.
 
 ## Contributing
 
-1. Fork it (<https://github.com/yourname/yourproject/fork>)
+1. Fork it.
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
 4. Push to the branch (`git push origin feature/fooBar`)
@@ -68,8 +78,8 @@ Download project .zip file and extract it.
 
 ## Authors
 
-* **RavagerWT** - *Initial work* - [Trading-History-Classifier](https://github.com/your-project-name)
+* **RavagerWT** - *Initial work* - [TD-Ameritrade-Trading-History-Classifier](https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier)
 
 ## License
 
-This project is licensed under the GPLv3 License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
