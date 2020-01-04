@@ -137,8 +137,8 @@ def setWindow(lang, st):
               [sg.Text(lang.gui_load_trade_history_file + ':')],
               [sg.Text(lang.gui_file + ':', justification='right'),
                sg.Text('', size=(65, 1), key='it_filePath')],
-              [sg.FileBrowse(lang.gui_load_trade_history_file, file_types=((lang.gui_spreadsheet_files, "*.xls"),
-                                         (lang.gui_spreadsheet_files, "*.xlsx"),), target='it_filePath'),
+              [sg.FileBrowse(lang.gui_load_trade_history_file, target='it_filePath', file_types=((lang.gui_spreadsheet_files, "*.xls"),
+                                         (lang.gui_spreadsheet_files, "*.xlsx"),), key='Browse'),
                sg.Button(lang.gui_process_history, key='Process History'),
                sg.Checkbox(lang.gui_exp_error_log, default=st.gen_exp_error_log, enable_events=True, key='exp error log')],
               [sg.Text(lang.gui_result + ':'),
@@ -270,9 +270,9 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         elif 'Bought' in tr_description.value or 'Sold' in tr_description.value:
             if tr_symbol.value in symbol_list:
                 symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
-                if tr_date.value != iter_date_STH:
-                    ws_STH.insert_rows(3)  # add new row                           
-                    ws_STH.cell(3, 1).value = date_for_sheet # date     
+                if tr_date.value != iter_date_STH or ws_STH.cell(3, symbol_index*4 + 2).value != None:
+                    ws_STH.insert_rows(3)  # add new row
+                    ws_STH.cell(3, 1).value = date_for_sheet  # date
                     iter_date_STH = tr_date.value
                 ws_STH.cell(3, symbol_index*4+2).value = tr_qty.value
                 ws_STH.cell(3, symbol_index*4+3).value = tr_price.value
@@ -378,9 +378,10 @@ def main(window, st, lang):
                     # sg.popup("File not exist!") # build-in pipup window
                     MessageBox(None, xls_fileName + ' ' + lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
                 else:
-                    error_qty = excelProcessor(xls_fileName, values['exp error log'], st, lang)                
+                    error_qty = excelProcessor(xls_fileName, values['exp error log'], st, lang, [])                
                     if error_qty != 0:
                         MessageBox(None, lang.log_msg_found_error.replace('-xx-', str(error_qty)), lang.msg_box_file_op_title, 0)
+                    window.Element('it_filePath').Update('')
                     window.Element('Result').Update(lang.gui_success)  #showing process result
         elif event is None or event == 'Exit':
             window.Close()
