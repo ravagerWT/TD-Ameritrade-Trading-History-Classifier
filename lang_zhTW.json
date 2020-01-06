@@ -48,7 +48,8 @@
             "W-8 預扣稅記錄",
             "電匯記錄",
             "版本",
-            "日誌"
+            "日誌",
+            "檔案狀態"
         ],
         "table_title": {
             "date": "日期",
@@ -63,7 +64,10 @@
             "remark": "備註"
         },
         "msg": {
-            "rebate": "回扣"
+            "rebate": "回扣",
+            "client_req_e_funding_dist": "客戶要求電匯轉出",
+            "client_req_e_funding_rec": "客戶要求電匯轉入",
+            "intra_account_transfer": "帳戶內轉帳"
         }
     },
     "xls_error_log": {

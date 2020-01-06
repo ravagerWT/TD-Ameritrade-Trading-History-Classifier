@@ -48,7 +48,8 @@
             "W-8 WITHHOLDING",
             "WIRE TRANSFER INFO",
             "Ver",
-            "log"
+            "log",
+            "file status"
         ],
         "table_title": {
             "date": "Date",
@@ -63,7 +64,10 @@
             "remark": "Remark"
         },
         "msg": {
-            "rebate": "Rebate"
+            "rebate": "Rebate",
+            "client_req_e_funding_dist": "CLIENT REQUESTED ELECTRONIC FUNDING DISBURSEMENT",
+            "client_req_e_funding_rec": "CLIENT REQUESTED ELECTRONIC FUNDING RECEIPT",
+            "intra_account_transfer": "INTRA-ACCOUNT TRANSFER"
         }
     },
     "xls_error_log": {

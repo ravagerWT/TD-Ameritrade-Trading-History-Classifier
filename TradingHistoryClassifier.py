@@ -4,7 +4,7 @@ import datetime
 import shutil
 import PySimpleGUI as sg
 from openpyxl import load_workbook, utils
-from openpyxl.styles import PatternFill, Alignment
+from openpyxl.styles import PatternFill, Alignment, Font
 # import openpyxl.worksheet
 import ctypes
 from datetime import datetime, date, time
@@ -173,7 +173,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         gather_symbol = False
     # loading workbook
     wb = load_workbook(xls_fileName)
-    # create sheets
+    # create sheets and setting status
     for i in range(len(sheet_list)):
         if not sheet_list[i] in wb.sheetnames:
             wb.create_sheet(sheet_list[i])
@@ -185,6 +185,9 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
     ws_WI = wb[sheet_list[3]]
     ws_ver = wb[sheet_list[4]]
     ws_log = wb[sheet_list[5]]
+    ws_status = wb[sheet_list[6]]
+    ws_status.protection.sheet = True
+    ws_status.sheet_state = 'hidden'
 
     # setting layout
     title_date = lang.xls_tt_date
@@ -202,7 +205,21 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
     iter_date_STH = ''
     iter_date_OD = ''
     iter_date_W8 = ''
-    iter_date_WI = ''
+    # iter_date_WI = ''
+    # check file status before process
+    if ws_status.cell(1, 2).value == None or ws_status.cell(1, 2).value == 'False':
+        ws_STH_have_inter_trans = False
+    elif ws_status.cell(1, 2).value == 'True':
+        ws_STH_have_inter_trans = True
+    if ws_status.cell(1, 5).value == None or ws_status.cell(1, 5).value == 'False':
+        ws_OD_have_quali_div = False
+    elif ws_status.cell(1, 5).value == 'True':
+        ws_OD_have_quali_div = True
+    if ws_status.cell(1, 8).value == None or ws_status.cell(1, 8).value == 'False':
+        ws_OD_have_cashInLieu = False
+    elif ws_status.cell(1, 8).value == 'True':
+        ws_OD_have_cashInLieu = True
+
     for i in range(2, ws_tran.max_row):
         tr_date = ws_tran.cell(i, 1)
         # date process
@@ -215,7 +232,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         tr_fee = ws_tran.cell(i, 7)
         tr_amount = ws_tran.cell(i, 8)
         # processing sheets format by stock symbols and gather all stock symbol from 'E5'
-        if gather_symbol:
+        if gather_symbol:  # for future feature.  If user know all they bought stock symbol, they could input it on GUI.
             if not tr_symbol.value in symbol_list and tr_symbol.value != None:
                 symbol_list.append(tr_symbol.value)  # gather stock symbol
                 symbol_index = symbol_list.index(tr_symbol.value)  # stock symbol
@@ -260,11 +277,32 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             ws_WI.insert_rows(2)  # add new row
             ws_WI.cell(2, 1).value = date_for_sheet  # date
             ws_WI.cell(2, 2).value = tr_amount.value  # amount
+        elif 'CLIENT REQUESTED ELECTRONIC FUNDING DISBURSEMENT' in tr_description.value:
+            ws_WI.insert_rows(2)  # add new row
+            ws_WI.cell(2, 1).value = date_for_sheet  # date
+            ws_WI.cell(2, 2).value = tr_amount.value  # amount
+            if ws_WI.cell(1, 3).value == None:
+                ws_WI.cell(1, 3).value = lang.xls_tt_remark
+            ws_WI.cell(2, 3).value = lang.xls_msg_client_req_e_funding_dist
+        elif 'CLIENT REQUESTED ELECTRONIC FUNDING RECEIPT' in tr_description.value:
+            ws_WI.insert_rows(2)  # add new row
+            ws_WI.cell(2, 1).value = date_for_sheet  # date
+            ws_WI.cell(2, 2).value = tr_amount.value  # amount
+            if ws_WI.cell(1, 3).value == None:
+                ws_WI.cell(1, 3).value = lang.xls_tt_remark
+            ws_WI.cell(2, 3).value = lang.xls_msg_client_req_e_funding_rec
+        elif 'INTRA-ACCOUNT TRANSFER' in tr_description.value:
+            ws_WI.insert_rows(2)  # add new row
+            ws_WI.cell(2, 1).value = date_for_sheet  # date
+            ws_WI.cell(2, 2).value = tr_amount.value  # amount
+            if ws_WI.cell(1, 3).value == None:
+                ws_WI.cell(1, 3).value = lang.xls_tt_remark
+            ws_WI.cell(2, 3).value = lang.xls_msg_intra_account_transfer
         elif 'REBATE' in tr_description.value:
             ws_WI.insert_rows(2)  # add new row
             ws_WI.cell(2, 1).value = date_for_sheet  # date
             ws_WI.cell(2, 2).value = tr_amount.value  # amount
-            if ws_WI.cell(1, 3).value != None or ws_WI.cell(1,3).value != '':
+            if ws_WI.cell(1, 3).value == None:
                 ws_WI.cell(1, 3).value = lang.xls_tt_remark
             ws_WI.cell(2, 3).value = lang.xls_msg_rebate
         elif 'Bought' in tr_description.value or 'Sold' in tr_description.value:
@@ -285,13 +323,68 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                     temp_msg = lang.log_msg_transaction_symbol_missing
                     ws_log.cell(2, 2).value = (temp_msg.replace('-symbol-', tr_symbol.value)).replace('-xx-', str(i))
                     error_log_qty += 1
+        elif 'INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES' in tr_description.value:
+            if tr_symbol.value in symbol_list:
+                symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
+                if tr_date.value != iter_date_STH or ws_STH.cell(3, symbol_index*4 + 2).value != None:
+                    ws_STH.insert_rows(3)  # add new row
+                    ws_STH.cell(3, 1).value = date_for_sheet  # date
+                    iter_date_STH = tr_date.value
+                ws_STH.cell(3, symbol_index*4+2).value = tr_qty.value
+                ws_STH.cell(3, symbol_index*4+3).value = tr_price.value
+                ws_STH.cell(3, symbol_index*4+4).value = tr_fee.value
+                ws_STH.cell(3, symbol_index*4+5).value = tr_amount.value
+                # change to italic to indicate INTERNAL TRANSFER
+                ws_STH.cell(3, symbol_index*4+2).font = Font(bold=True)
+                ws_STH.cell(3, symbol_index*4+3).font = Font(bold=True)
+                ws_STH.cell(3, symbol_index*4+4).font = Font(bold=True)
+                ws_STH.cell(3, symbol_index*4+5).font = Font(bold=True)
+                if ws_STH.cell(ws_STH.max_row+1, 1).value == None and ws_STH_have_inter_trans == False:
+                    ws_STH.cell(ws_STH.max_row+1, 1).value = 'Bold: INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES'
+                    ws_STH.cell(ws_STH.max_row+1, 1).font = Font(bold=True)
+                    ws_status['A1'] = 'INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES'
+                    ws_status['A2'] = 'True'
+                    ws_STH_have_inter_trans = True
+            else: # export error message
+                if exp_error_log:
+                    ws_log.insert_rows(2)
+                    ws_log.cell(2, 1).value = lang.log_evt_transaction_symbol_missing
+                    temp_msg = lang.log_msg_transaction_symbol_missing
+                    ws_log.cell(2, 2).value = (temp_msg.replace('-symbol-', tr_symbol.value)).replace('-xx-', str(i))
+                    error_log_qty += 1
         elif 'ORDINARY DIVIDEND' in tr_description.value:
             symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
             if tr_date.value != iter_date_OD:
-                ws_OD.insert_rows(2)  # add new row                           
-                ws_OD.cell(2, 1).value = date_for_sheet # date     
+                ws_OD.insert_rows(2)  # add new row
+                ws_OD.cell(2, 1).value = date_for_sheet  # date
                 iter_date_OD = tr_date.value
             ws_OD.cell(2, symbol_index+2).value = tr_amount.value
+        elif 'QUALIFIED DIVIDEND' in tr_description.value:
+            if ws_OD_have_quali_div == False:
+                ws_OD.cell(ws_OD.max_row+1, 1).value = 'Italic: Qualified Dividend'
+                ws_OD.cell(ws_OD.max_row+1, 1).font = Font(italic=True)
+                ws_status['A4'] = 'QUALIFIED DIVIDEND'
+                ws_status['A5'] = 'True'
+                ws_OD_have_quali_div = True
+            if tr_date.value != iter_date_OD:
+                ws_OD.insert_rows(2)  # add new row
+                ws_OD.cell(2, 1).value = date_for_sheet  # date
+                iter_date_OD = tr_date.value
+            ws_OD.cell(2, symbol_index+2).value = tr_amount.value
+            ws_OD.cell(2, symbol_index+2).font = Font(italic=True)
+        elif 'CASH IN LIEU' in tr_description.value:
+            if ws_OD_have_cashInLieu == False:
+                ws_OD.cell(ws_OD.max_row+1, 1).value = 'Bold: CASH IN LIEU OF FRACTIONAL SHARES'
+                ws_OD.cell(ws_OD.max_row+1, 1).font = Font(bold=True)
+                ws_status['A7'] = 'CASH IN LIEU'
+                ws_status['A8'] = 'True'
+                ws_OD_have_cashInLieu = True
+            if tr_date.value != iter_date_OD:
+                ws_OD.insert_rows(2)  # add new row
+                ws_OD.cell(2, 1).value = date_for_sheet  # date
+                iter_date_OD = tr_date.value
+            ws_OD.cell(2, symbol_index+2).value = tr_amount.value
+            ws_OD.cell(2, symbol_index+2).font = Font(bold=True)
         elif 'WITHHOLDING' in tr_description.value:            
             if tr_symbol.value == None: # export error message
                 if exp_error_log:
@@ -306,7 +399,6 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                     ws_W8.cell(2, 1).value = date_for_sheet  # date
                     iter_date_W8 = tr_date.value
                 ws_W8.cell(2, symbol_index+2).value = tr_amount.value
-        #// TODO: The keyword for Withdrawal is unknown
         else: # export error message
             if exp_error_log:
                 ws_log.insert_rows(2)
@@ -322,12 +414,13 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         ws_ver['A2'] = date.today().strftime("%Y/%m/%d")  # date
         ws_ver['B2'] = 0
         file_version = 0
+        fileNameRev = file + '_r' + str(file_version) + ext
     else:
         ws_ver.insert_rows(2)  # add new row
         ws_ver['A2'] = date.today().strftime("%Y/%m/%d")  # date
         file_version += 1  # update version number
         ws_ver['B2'] = file_version
-    fileNameRev = file + '_r' + str(file_version) + ext
+        fileNameRev = file[:-1] + str(file_version) + ext
     
     # setting cell color
     for k in range(len(symbol_list)):

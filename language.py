@@ -61,7 +61,11 @@ class Lang:
         self.xls_tt_msg = data['excel']['table_title']['message']
         self.xls_tt_remark = data['excel']['table_title']['remark']
 
+        # remark message
         self.xls_msg_rebate = data['excel']['msg']['rebate']
+        self.xls_msg_client_req_e_funding_dist = data['excel']['msg']['client_req_e_funding_dist']
+        self.xls_msg_client_req_e_funding_rec = data['excel']['msg']['client_req_e_funding_rec']
+        self.xls_msg_intra_account_transfer = data['excel']['msg']['intra_account_transfer']
 
         self.log_evt_description_keyword_missing = data[
             'xls_error_log']['event']['description_keyword_missing']
