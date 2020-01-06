@@ -130,15 +130,17 @@ def loadLang(lang_code='English (enUS)'):
 # setup window layout
 def setWindow(lang, st):
     # setup window layout
-    layout = [[sg.Text(lang.gui_program_setting + ':'), sg.Text('', size=(20, 1), key='settings status')],
-              [sg.FileBrowse(lang.gui_load_setting_file, file_types=((lang.gui_settings_file, "settings.json"),)),
+    layout = [[sg.Text(lang.gui_program_setting + ':')],
+              [sg.Text(lang.gui_file + ':', justification='right'),
+               sg.Text('', size=(65, 1), key='settings status')],
+              [sg.FileBrowse(lang.gui_load_setting_file, target='settings status', file_types=((lang.gui_settings_file, "*settings*.json"),), key='Load Setting File'),
                sg.Button(lang.gui_apply_settings, key='Apply Settings'), sg.Button(lang.gui_open_setting_editor, key='Open Setting Editor')],
               [sg.Text('_' * 100, size=(70, 1))],
               [sg.Text(lang.gui_load_trade_history_file + ':')],
               [sg.Text(lang.gui_file + ':', justification='right'),
                sg.Text('', size=(65, 1), key='it_filePath')],
               [sg.FileBrowse(lang.gui_load_trade_history_file, target='it_filePath', file_types=((lang.gui_spreadsheet_files, "*.xls"),
-                                         (lang.gui_spreadsheet_files, "*.xlsx"),), key='Browse'),
+                                                                                                 (lang.gui_spreadsheet_files, "*.xlsx"),), key='Browse'),
                sg.Button(lang.gui_process_history, key='Process History'),
                sg.Checkbox(lang.gui_exp_error_log, default=st.gen_exp_error_log, enable_events=True, key='exp error log')],
               [sg.Text(lang.gui_result + ':'),
@@ -475,13 +477,13 @@ def main(window, st, lang):
         if event == 'Apply Settings':            
             if values['Load Setting File'] == None or values['Load Setting File'] == '':
                 MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)
-            else:                                
+            else:
                 window.Close()
-                return True
+                return True, os.path.basename(values['Load Setting File'])
         elif event == 'Open Setting Editor':
             if editSetting(st, lang):
                 window.close()
-                return True
+                return True, 'settings.json'
         elif event == 'Process History':
             xls_fileName = getXlsFileName(values['Browse'], lang)
             if xls_fileName == 'PathError':
@@ -498,15 +500,16 @@ def main(window, st, lang):
                     window.Element('Result').Update(lang.gui_success)  #showing process result
         elif event is None or event == 'Exit':
             window.Close()
-            return False
+            return False, 'settings.json'
 
 if __name__ == '__main__':
     continue_program = True
     sg.change_look_and_feel('Dark Blue 3')  # windows colorful
     MessageBox = ctypes.windll.user32.MessageBoxW
+    setting_file_name = 'settings.json'
     while continue_program:
-        st = loadSetting(setting_file_name='settings.json')
+        st = loadSetting(setting_file_name)
         lang = loadLang(st.gen_set_lang)
         window = setWindow(lang, st)
         # if setting have any changes, program will restart automatically
-        continue_program = main(window, st, lang)
+        continue_program, setting_file_name = main(window, st, lang)
