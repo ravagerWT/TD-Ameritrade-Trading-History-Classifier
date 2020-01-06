@@ -1,6 +1,6 @@
 # TD Ameritrade Trading History Classifier
 
-![](screenshot/Main%20GUI%20Beta1.0.jpg?raw=true)
+![](screenshot/Main%20GUI%20Beta1.1.jpg?raw=true)
 
 This python program help user easily classify the transactions history by symbol and account activity into several spreading sheets.
 
@@ -64,7 +64,10 @@ Q: What environment does this program run?
 
 Q: Could I add new trading history into processed spreadsheet file by this program?
 
-*A: Add new trading history into a existing processed file is not supported by current version.  You need to manually integrate them into existing spreadsheet file.*
+*A: Yes, please following instruction to add it.*
+- Step1: Delete transactions sheet from processed file (ex.my_transactions_r0.xlsx).
+- Step2: Duplicate the new transactions sheet from new downloaded file (ex.transactions.xlsx) to processed file and save it.  Make sure all trading history are correct because this program won't check it for you.
+- Step3: Open program and select modified file to classify.
 
 Q: How to change program interface language?
 
