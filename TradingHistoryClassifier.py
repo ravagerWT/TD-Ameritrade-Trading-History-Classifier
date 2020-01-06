@@ -410,6 +410,11 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                     ws_W8.cell(2, 1).value = date_for_sheet  # date
                     iter_date_W8 = tr_date.value
                 ws_W8.cell(2, symbol_index+2).value = tr_amount.value
+        elif 'MARGIN INTEREST' in tr_description.value or 'ADR FEE' in tr_description.value or 'OFF-CYCLE INTEREST' in tr_description.value:
+            if exp_error_log:
+                ws_log.insert_rows(2)
+                ws_log.cell(2, 1).value = lang.log_evt_event_skip
+                ws_log.cell(2, 2).value = (lang.log_msg_event_skip.replace('-description-', tr_description.value)).replace('-xx-', str(i))
         else: # export error message
             if exp_error_log:
                 ws_log.insert_rows(2)

@@ -74,12 +74,14 @@
         "event": {
             "description_keyword_missing": "Description error",
             "withholding_symbol_missing": "Withholding missing symbol",
-            "transaction_symbol_missing": "Transaction missing symbol"
+            "transaction_symbol_missing": "Transaction missing symbol",
+            "event_skip": "Event Skip"
         },
         "message": {
-            "description_keyword_missing": "Unknown description keyword: -symbol- on -xx-th row",
+            "description_keyword_missing": "Unknown description keyword: -description- on -xx-th row",
             "withholding_symbol_missing": "No symbol information on -xx-th row",
-            "transaction_symbol_missing": "Not in symbol list: -description- on -xx-th row",
+            "transaction_symbol_missing": "Not in symbol list: -symbol- on -xx-th row",
+            "event_skip": "-description- have been skipped on -xx-th row",
             "found_error": "-xx- errors found in transactions file, please check log sheet for detail information!"
         }
     }

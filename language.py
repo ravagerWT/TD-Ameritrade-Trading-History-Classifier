@@ -67,19 +67,22 @@ class Lang:
         self.xls_msg_client_req_e_funding_rec = data['excel']['msg']['client_req_e_funding_rec']
         self.xls_msg_intra_account_transfer = data['excel']['msg']['intra_account_transfer']
 
+        # excel log
         self.log_evt_description_keyword_missing = data[
             'xls_error_log']['event']['description_keyword_missing']
         self.log_evt_withholding_symbol_missing = data[
             'xls_error_log']['event']['withholding_symbol_missing']
         self.log_evt_transaction_symbol_missing = data[
             'xls_error_log']['event']['transaction_symbol_missing']
+        self.log_evt_event_skip = data['xls_error_log']['event']['event_skip']
 
         self.log_msg_description_keyword_missing = data[
-            'xls_error_log']['message']['description_keyword_missing']        
+            'xls_error_log']['message']['description_keyword_missing']
         self.log_msg_withholding_symbol_missing = data[
             'xls_error_log']['message']['withholding_symbol_missing']
         self.log_msg_transaction_symbol_missing = data[
-            'xls_error_log']['message']['transaction_symbol_missing']        
+            'xls_error_log']['message']['transaction_symbol_missing']
+        self.log_msg_event_skip = data['xls_error_log']['message']['event_skip']
         self.log_msg_found_error = data['xls_error_log']['message']['found_error']
 
 

@@ -74,12 +74,14 @@
         "event": {
             "description_keyword_missing": "交易描述錯誤",
             "withholding_symbol_missing": "Withholding missing symbol",
-            "transaction_symbol_missing": "Transaction symbol missing"
+            "transaction_symbol_missing": "Transaction symbol missing",
+            "event_skip": "忽略記錄"
         },
         "message": {
-            "description_keyword_missing": "未定義交易描述關鍵字: -symbol- on -xx-th row",
+            "description_keyword_missing": "未定義交易描述關鍵字: -description- on -xx-th row",
             "withholding_symbol_missing": "第-xx-列缺少交易代碼",
-            "transaction_symbol_missing": "Not in symbol list: -description- on -xx-th row",
+            "transaction_symbol_missing": "Not in symbol list: -symbol- on -xx-th row",
+            "event_skip": "第-xx-列-description-記錄已被忽略",
             "found_error": "於交易記錄中發現-xx-個錯誤，請至日誌分頁中檢視詳細訊息!"
         }
     }
