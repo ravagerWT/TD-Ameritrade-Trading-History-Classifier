@@ -219,6 +219,37 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         ws_OD_have_cashInLieu = False
     elif ws_status.cell(1, 8).value == 'True':
         ws_OD_have_cashInLieu = True
+    
+    # retrieve symbol list from file
+    if ws_status['A11'].value != None:
+        existing_symbol_list = [sym.strip() for sym in ws_status['A11'].value.split(',')]
+        print(existing_symbol_list)
+        if gather_symbol:
+            symbol_list = existing_symbol_list
+    
+    # for future feature.  If user know all stock symbol for this batch trading history, they could input it on GUI.
+    if not gather_symbol:
+        for symbol in symbol_list:
+            if not symbol in existing_symbol_list:
+                existing_symbol_list.append(symbol)
+        symbol_list = existing_symbol_list
+        for tr_symbol in symbol_list:
+            symbol_index = symbol_list.index(tr_symbol)  # stock symbol
+            ws_STH.cell(1, symbol_index*4+2).value = tr_symbol
+            ws_STH.merge_cells(start_row=1, start_column=symbol_index *
+                            4+2, end_row=1, end_column=symbol_index*4+5)  # merge cell
+            ws_STH.cell(1, symbol_index*4+2).alignment = Alignment(
+                horizontal="center", vertical="center")  # centering text
+            ws_STH.cell(2, symbol_index*4+2).value = lang.xls_tt_quantity
+            ws_STH.cell(2, symbol_index*4+3).value = lang.xls_tt_price
+            ws_STH.cell(2, symbol_index*4+4).value = lang.xls_tt_commission
+            ws_STH.cell(2, symbol_index*4+5).value = lang.xls_tt_amount
+            ws_OD.cell(1, symbol_index+2).value = tr_symbol
+            ws_OD.cell(1, symbol_index+2).alignment = Alignment(
+                horizontal="center", vertical="center")  # centering text
+            ws_W8.cell(1, symbol_index+2).value = tr_symbol
+            ws_W8.cell(1, symbol_index+2).alignment = Alignment(
+                horizontal="center", vertical="center")  # centering text
 
     for i in range(2, ws_tran.max_row):
         tr_date = ws_tran.cell(i, 1)
@@ -227,12 +258,12 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         date_for_sheet = temp_date_for_sheet.strftime(st.xls_fmt_display_date_format)
         tr_description = ws_tran.cell(i, 3)
         tr_qty = ws_tran.cell(i, 4)
-        tr_symbol = ws_tran.cell(i, 5)        
+        tr_symbol = ws_tran.cell(i, 5)
         tr_price = ws_tran.cell(i, 6)
         tr_fee = ws_tran.cell(i, 7)
         tr_amount = ws_tran.cell(i, 8)
         # processing sheets format by stock symbols and gather all stock symbol from 'E5'
-        if gather_symbol:  # for future feature.  If user know all they bought stock symbol, they could input it on GUI.
+        if gather_symbol:
             if not tr_symbol.value in symbol_list and tr_symbol.value != None:
                 symbol_list.append(tr_symbol.value)  # gather stock symbol
                 symbol_index = symbol_list.index(tr_symbol.value)  # stock symbol
@@ -251,26 +282,6 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 ws_W8.cell(1, symbol_index+2).value = tr_symbol.value
                 ws_W8.cell(1, symbol_index+2).alignment = Alignment(
                     horizontal="center", vertical="center")  # centering text
-                # print(tr_symbol.value)  # debug message
-        else:
-            for i in range(len(symbol_list)):
-                symbol_index = symbol_list.index(tr_symbol.value)  # stock symbol
-                ws_STH.cell(1, symbol_index*4+2).value = tr_symbol.value
-                ws_STH.merge_cells(start_row=1, start_column=symbol_index *
-                                4+2, end_row=1, end_column=symbol_index*4+5)  # merge cell
-                ws_STH.cell(1, symbol_index*4+2).alignment = Alignment(
-                    horizontal="center", vertical="center")  # centering text
-                ws_STH.cell(2, symbol_index*4+2).value = lang.xls_tt_quantity
-                ws_STH.cell(2, symbol_index*4+3).value = lang.xls_tt_price
-                ws_STH.cell(2, symbol_index*4+4).value = lang.xls_tt_commission
-                ws_STH.cell(2, symbol_index*4+5).value = lang.xls_tt_amount
-                ws_OD.cell(1, symbol_index+2).value = tr_symbol.value
-                ws_OD.cell(1, symbol_index+2).alignment = Alignment(
-                    horizontal="center", vertical="center")  # centering text
-                ws_W8.cell(1, symbol_index+2).value = tr_symbol.value
-                ws_W8.cell(1, symbol_index+2).alignment = Alignment(
-                    horizontal="center", vertical="center")  # centering text
-                # print(tr_symbol.value)  # debug message
 
         # sorting trade history by the description of transactions
         if 'WIRE INCOMING' in tr_description.value:
@@ -407,6 +418,12 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 error_log_qty += 1
                 # print('not in the known keyword: ' + ws_tran.cell(i, 3).value)
 
+    # record symbol list and quantity for this batch of trading history
+    ws_status['A10'] = 'Symbol list:'
+    ws_status['A11'] = ','.join(symbol_list)
+    ws_status['A13'] = 'Symbol quantity'
+    ws_status['A14'] = len(symbol_list)
+    
     # version control
     file_version = ws_ver['B2'].value  # get current file version
     [file, ext] = os.path.splitext(xls_fileName)
@@ -420,7 +437,10 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         ws_ver['A2'] = date.today().strftime("%Y/%m/%d")  # date
         file_version += 1  # update version number
         ws_ver['B2'] = file_version
-        fileNameRev = file[:-1] + str(file_version) + ext
+        if '_r' in file:
+            fileNameRev = file[:file.find('_r')+2] + str(file_version) + ext
+        else:
+            fileNameRev = file + '_r' + str(file_version) + ext
     
     # setting cell color
     for k in range(len(symbol_list)):
@@ -437,11 +457,6 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         for row in ws_W8.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_W8.max_row):
             for cell in row:
                 cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
-
-        # ws_OD.column_dimensions[utils.cell.get_column_letter(
-            # k+2)].fill = PatternFill(fgColor=color_fill, fill_type="solid")
-        # ws_W8.column_dimensions[utils.cell.get_column_letter(
-            # k+2)].fill = PatternFill(fgColor=color_fill, fill_type="solid")
 
     wb.save(fileNameRev)  # save processed file
     return error_log_qty
