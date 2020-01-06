@@ -67,7 +67,10 @@
             "rebate": "Rebate",
             "client_req_e_funding_dist": "CLIENT REQUESTED ELECTRONIC FUNDING DISBURSEMENT",
             "client_req_e_funding_rec": "CLIENT REQUESTED ELECTRONIC FUNDING RECEIPT",
-            "intra_account_transfer": "INTRA-ACCOUNT TRANSFER"
+            "intra_account_transfer": "INTRA-ACCOUNT TRANSFER",
+            "bold_indication_ITA": "Bold: INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES",
+            "italic_qual_div": "Italic: Qualified Dividend",
+            "bold_cashInLieu": "Bold: CASH IN LIEU OF FRACTIONAL SHARES"
         }
     },
     "xls_error_log": {

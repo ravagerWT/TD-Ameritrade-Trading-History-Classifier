@@ -351,7 +351,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 ws_STH.cell(3, symbol_index*4+4).font = Font(bold=True)
                 ws_STH.cell(3, symbol_index*4+5).font = Font(bold=True)
                 if ws_STH.cell(ws_STH.max_row+1, 1).value == None and ws_STH_have_inter_trans == False:
-                    ws_STH.cell(ws_STH.max_row+1, 1).value = 'Bold: INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES'
+                    ws_STH.cell(ws_STH.max_row+1, 1).value = lang.xls_msg_bold_indication_ITA
                     ws_STH.cell(ws_STH.max_row+1, 1).font = Font(bold=True)
                     ws_status['A1'] = 'INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES'
                     ws_status['A2'] = 'True'
@@ -372,7 +372,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             ws_OD.cell(2, symbol_index+2).value = tr_amount.value
         elif 'QUALIFIED DIVIDEND' in tr_description.value:
             if ws_OD_have_quali_div == False:
-                ws_OD.cell(ws_OD.max_row+1, 1).value = 'Italic: Qualified Dividend'
+                ws_OD.cell(ws_OD.max_row+1, 1).value = lang.xls_msg_italic_qual_div
                 ws_OD.cell(ws_OD.max_row+1, 1).font = Font(italic=True)
                 ws_status['A4'] = 'QUALIFIED DIVIDEND'
                 ws_status['A5'] = 'True'
@@ -385,7 +385,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             ws_OD.cell(2, symbol_index+2).font = Font(italic=True)
         elif 'CASH IN LIEU' in tr_description.value:
             if ws_OD_have_cashInLieu == False:
-                ws_OD.cell(ws_OD.max_row+1, 1).value = 'Bold: CASH IN LIEU OF FRACTIONAL SHARES'
+                ws_OD.cell(ws_OD.max_row+1, 1).value = lang.xls_msg_bold_cashInLieu
                 ws_OD.cell(ws_OD.max_row+1, 1).font = Font(bold=True)
                 ws_status['A7'] = 'CASH IN LIEU'
                 ws_status['A8'] = 'True'

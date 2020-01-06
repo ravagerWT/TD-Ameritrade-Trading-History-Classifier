@@ -66,6 +66,9 @@ class Lang:
         self.xls_msg_client_req_e_funding_dist = data['excel']['msg']['client_req_e_funding_dist']
         self.xls_msg_client_req_e_funding_rec = data['excel']['msg']['client_req_e_funding_rec']
         self.xls_msg_intra_account_transfer = data['excel']['msg']['intra_account_transfer']
+        self.xls_msg_bold_indication_ITA = data['excel']['msg']['bold_indication_ITA']
+        self.xls_msg_italic_qual_div = data['excel']['msg']['italic_qual_div']
+        self.xls_msg_bold_cashInLieu = data['excel']['msg']['bold_cashInLieu']
 
         # excel log
         self.log_evt_description_keyword_missing = data[
