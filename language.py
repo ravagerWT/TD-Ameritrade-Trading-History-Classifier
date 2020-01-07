@@ -88,6 +88,10 @@ class Lang:
         self.log_msg_event_skip = data['xls_error_log']['message']['event_skip']
         self.log_msg_found_error = data['xls_error_log']['message']['found_error']
 
+        # excel status log
+        self.xls_stat_sym_list = data['xls_stat_log']['sym_list']
+        self.xls_stat_sym_qty = data['xls_stat_log']['sym_qty']
+
 
 if __name__ == '__main__':
     # open json file and read

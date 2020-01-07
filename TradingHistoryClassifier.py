@@ -191,7 +191,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
     ws_status.protection.sheet = True
     ws_status.sheet_state = 'hidden'
 
-    # setting layout
+    # setting excel sheets layout
     title_date = lang.xls_tt_date
     ws_STH['A2'] = title_date # Sorted trade history
     ws_OD['A1'] = title_date # ORDINARY DIVIDEND
@@ -202,6 +202,11 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
     ws_ver['B1'] = lang.xls_tt_ver
     ws_log['A1'] = lang.xls_tt_event
     ws_log['B1'] = lang.xls_tt_msg
+    ws_status['A1'] = lang.xls_stat_sym_list
+    ws_status['A4'] = lang.xls_stat_sym_qty
+    ws_status['A7'] = 'INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES'
+    ws_status['A10'] = 'QUALIFIED DIVIDEND'
+    ws_status['A13'] = 'CASH IN LIEU'
 
     # start sheets process
     iter_date_STH = ''
@@ -209,33 +214,35 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
     iter_date_W8 = ''
     # iter_date_WI = ''
     # check file status before process
-    if ws_status.cell(1, 2).value == None or ws_status.cell(1, 2).value == 'False':
-        ws_STH_have_inter_trans = False
-    elif ws_status.cell(1, 2).value == 'True':
-        ws_STH_have_inter_trans = True
-    if ws_status.cell(1, 5).value == None or ws_status.cell(1, 5).value == 'False':
-        ws_OD_have_quali_div = False
-    elif ws_status.cell(1, 5).value == 'True':
-        ws_OD_have_quali_div = True
     if ws_status.cell(1, 8).value == None or ws_status.cell(1, 8).value == 'False':
-        ws_OD_have_cashInLieu = False
+        ws_STH_have_inter_trans = False
     elif ws_status.cell(1, 8).value == 'True':
+        ws_STH_have_inter_trans = True
+    if ws_status.cell(1, 11).value == None or ws_status.cell(1, 11).value == 'False':
+        ws_OD_have_quali_div = False
+    elif ws_status.cell(1, 11).value == 'True':
+        ws_OD_have_quali_div = True
+    if ws_status.cell(1, 14).value == None or ws_status.cell(1, 14).value == 'False':
+        ws_OD_have_cashInLieu = False
+    elif ws_status.cell(1, 14).value == 'True':
         ws_OD_have_cashInLieu = True
     
     # retrieve symbol list from file
-    if ws_status['A11'].value != None:
-        existing_symbol_list = [sym.strip() for sym in ws_status['A11'].value.split(',')]
+    if ws_status['A2'].value != None:
+        existing_symbol_list = [sym.strip() for sym in ws_status['A2'].value.split(',')]
         print(existing_symbol_list)
         if gather_symbol:
             symbol_list = existing_symbol_list
     
     # for future feature.  If user know all stock symbol for this batch trading history, they could input it on GUI.
     if not gather_symbol:
+        symbol_be_handled = []
         for symbol in symbol_list:
             if not symbol in existing_symbol_list:
                 existing_symbol_list.append(symbol)
+                symbol_be_handled.append(symbol)
         symbol_list = existing_symbol_list
-        for tr_symbol in symbol_list:
+        for tr_symbol in symbol_be_handled:
             symbol_index = symbol_list.index(tr_symbol)  # stock symbol
             ws_STH.cell(1, symbol_index*4+2).value = tr_symbol
             ws_STH.merge_cells(start_row=1, start_column=symbol_index *
@@ -355,8 +362,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 if ws_STH.cell(ws_STH.max_row+1, 1).value == None and ws_STH_have_inter_trans == False:
                     ws_STH.cell(ws_STH.max_row+1, 1).value = lang.xls_msg_bold_indication_ITA
                     ws_STH.cell(ws_STH.max_row+1, 1).font = Font(bold=True)
-                    ws_status['A1'] = 'INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES'
-                    ws_status['A2'] = 'True'
+                    ws_status['A8'] = 'True'
                     ws_STH_have_inter_trans = True
             else: # export error message
                 if exp_error_log:
@@ -376,8 +382,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             if ws_OD_have_quali_div == False:
                 ws_OD.cell(ws_OD.max_row+1, 1).value = lang.xls_msg_italic_qual_div
                 ws_OD.cell(ws_OD.max_row+1, 1).font = Font(italic=True)
-                ws_status['A4'] = 'QUALIFIED DIVIDEND'
-                ws_status['A5'] = 'True'
+                ws_status['A11'] = 'True'
                 ws_OD_have_quali_div = True
             if tr_date.value != iter_date_OD:
                 ws_OD.insert_rows(2)  # add new row
@@ -389,8 +394,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             if ws_OD_have_cashInLieu == False:
                 ws_OD.cell(ws_OD.max_row+1, 1).value = lang.xls_msg_bold_cashInLieu
                 ws_OD.cell(ws_OD.max_row+1, 1).font = Font(bold=True)
-                ws_status['A7'] = 'CASH IN LIEU'
-                ws_status['A8'] = 'True'
+                ws_status['A14'] = 'True'
                 ws_OD_have_cashInLieu = True
             if tr_date.value != iter_date_OD:
                 ws_OD.insert_rows(2)  # add new row
@@ -405,7 +409,6 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                     ws_log.cell(2, 1).value = 'WITHHOLDING'
                     ws_log.cell(2, 2).value = lang.log_msg_withholding_symbol_missing.replace('-xx-', str(i))
                     error_log_qty += 1
-                    # ws_W8.cell(2, len(symbol_list)+2).value = tr_amount.value
             else:
                 if tr_date.value != iter_date_W8:
                     ws_W8.insert_rows(2)  # add new row
@@ -423,13 +426,27 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 ws_log.cell(2, 1).value = lang.log_evt_description_keyword_missing
                 ws_log.cell(2, 2).value = (lang.log_msg_description_keyword_missing.replace('-description-', tr_description.value)).replace('-xx-', str(i))
                 error_log_qty += 1
-                # print('not in the known keyword: ' + ws_tran.cell(i, 3).value)
 
     # record symbol list and quantity for this batch of trading history
-    ws_status['A10'] = 'Symbol list:'
-    ws_status['A11'] = ','.join(symbol_list)
-    ws_status['A13'] = 'Symbol quantity'
-    ws_status['A14'] = len(symbol_list)
+    ws_status['A2'] = ','.join(symbol_list)
+    ws_status['A5'] = len(symbol_list)
+    
+    #// TODO: performance optimization required: need a new approach to set the cell color
+    # setting cell color
+    for k in range(len(symbol_list)):
+        if k % 2 == 0:
+            color_fill = st.xls_fmt_color_for_even_column
+        else:
+            color_fill = st.xls_fmt_color_for_odd_column
+        for row in ws_STH.iter_rows(min_col=k*4+2, min_row=1, max_col=k*4+5, max_row=ws_STH.max_row):
+            for cell in row:
+                cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
+        for row in ws_OD.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_OD.max_row):
+            for cell in row:
+                cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
+        for row in ws_W8.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_W8.max_row):
+            for cell in row:
+                cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
     
     # version control
     file_version = ws_ver['B2'].value  # get current file version
@@ -448,22 +465,6 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             fileNameRev = file[:file.find('_r')+2] + str(file_version) + ext
         else:
             fileNameRev = file + '_r' + str(file_version) + ext
-    
-    # setting cell color
-    for k in range(len(symbol_list)):
-        if k % 2 == 0:
-            color_fill = st.xls_fmt_color_for_even_column
-        else:
-            color_fill = st.xls_fmt_color_for_odd_column
-        for row in ws_STH.iter_rows(min_col=k*4+2, min_row=1, max_col=k*4+5, max_row=ws_STH.max_row):
-            for cell in row:
-                cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
-        for row in ws_OD.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_OD.max_row):
-            for cell in row:
-                cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
-        for row in ws_W8.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_W8.max_row):
-            for cell in row:
-                cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
 
     wb.save(fileNameRev)  # save processed file
     return error_log_qty

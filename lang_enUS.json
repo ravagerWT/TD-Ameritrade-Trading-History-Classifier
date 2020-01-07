@@ -87,5 +87,9 @@
             "event_skip": "-description- have been skipped on -xx-th row",
             "found_error": "-xx- errors found in transactions file, please check log sheet for detail information!"
         }
+    },
+    "xls_stat_log": {
+        "sym_list": "Symbol List",
+        "sym_qty": "Symbol Quantity"
     }
 }

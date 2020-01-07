@@ -87,5 +87,9 @@
             "event_skip": "第-xx-列-description-記錄已被忽略",
             "found_error": "於交易記錄中發現-xx-個錯誤，請至日誌分頁中檢視詳細訊息!"
         }
+    },
+    "xls_stat_log": {
+        "sym_list": "股票代號清單",
+        "sym_qty": "股票代號總數"
     }
 }
