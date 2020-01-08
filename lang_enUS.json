@@ -35,6 +35,8 @@
     "msg_box": {
         "file_op_title": "File Operation",
         "file_not_exist": "File not exist!",
+        "file_processed": "This file is already sorted!",
+        "trading_sht_not_exist": "This file doesn't contain the transactions sheet!",
         "select_file_first": "Please select file first!",
         "settings_file_not_change": "The settings file has not changed!",
         "color_fmt_wrong_title": "Color Format Wrong",

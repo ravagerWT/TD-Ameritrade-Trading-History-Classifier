@@ -35,6 +35,8 @@
     "msg_box": {
         "file_op_title": "檔案操作",
         "file_not_exist": "檔案不存在!",
+        "file_processed": "此檔案已完成分類!",
+        "trading_sht_not_exist": "此檔案未包含交易記錄表!",
         "select_file_first": "請先選擇檔案!",
         "settings_file_not_change": "設定檔並無改變!",
         "color_fmt_wrong_title": "顏色格式錯誤",

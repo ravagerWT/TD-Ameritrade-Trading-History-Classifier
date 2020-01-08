@@ -41,6 +41,8 @@ class Lang:
         # msg box
         self.msg_box_file_op_title = data['msg_box']['file_op_title']
         self.msg_box_file_not_exist = data['msg_box']['file_not_exist']
+        self.msg_box_file_processed = data['msg_box']['file_processed']
+        self.msg_box_trading_sht_not_exist = data['msg_box']['trading_sht_not_exist']
         self.msg_box_select_file_first = data['msg_box']['select_file_first']
         self.msg_box_settings_file_not_change = data['msg_box']['settings_file_not_change']
         self.msg_box_color_fmt_wrong_title = data['msg_box']['color_fmt_wrong_title']

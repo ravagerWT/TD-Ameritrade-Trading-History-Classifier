@@ -4,7 +4,7 @@ import datetime
 import shutil
 import PySimpleGUI as sg
 from openpyxl import load_workbook, utils
-from openpyxl.styles import PatternFill, Alignment, Font
+from openpyxl.styles import colors, PatternFill, Alignment, Font
 # import openpyxl.worksheet
 import ctypes
 from datetime import datetime, date, time
@@ -180,7 +180,13 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         if not sheet_list[i] in wb.sheetnames:
             wb.create_sheet(sheet_list[i])
     
-    ws_tran = wb["transactions"]
+    # check transactions file status
+    if 'transactions(DONE)' in wb.sheetnames:
+        return -2
+    elif not 'transactions' in wb.sheetnames:
+        return -1
+    else:
+        ws_tran = wb["transactions"]
     ws_STH = wb[sheet_list[0]]
     ws_OD = wb[sheet_list[1]]
     ws_WH = wb[sheet_list[2]]
@@ -376,11 +382,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 ws_STH.cell(3, symbol_index*4+3).font = Font(bold=True)
                 ws_STH.cell(3, symbol_index*4+4).font = Font(bold=True)
                 ws_STH.cell(3, symbol_index*4+5).font = Font(bold=True)
-                if ws_STH.cell(ws_STH.max_row+1, 1).value == None and ws_STH_have_inter_trans == False:
-                    ws_STH.cell(ws_STH.max_row+1, 1).value = lang.xls_msg_bold_indication_ITA
-                    ws_STH.cell(ws_STH.max_row+1, 1).font = Font(bold=True)
-                    ws_status['A8'] = 'True'
-                    ws_STH_have_inter_trans = True
+                ws_STH_have_inter_trans = True
             else: # export error message
                 if exp_error_log:
                     ws_log.insert_rows(2)
@@ -404,11 +406,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 ws_STH.cell(3, symbol_index*4+3).font = Font(italic=True)
                 ws_STH.cell(3, symbol_index*4+4).font = Font(italic=True)
                 ws_STH.cell(3, symbol_index*4+5).font = Font(italic=True)
-                if ws_STH.cell(ws_STH.max_row+1, 1).value == None and ws_STH_have_mandi_exchange == False:
-                    ws_STH.cell(ws_STH.max_row+1, 1).value = lang.xls_msg_italic_mandi_exchange
-                    ws_STH.cell(ws_STH.max_row+1, 1).font = Font(italic=True)
-                    ws_status['A23'] = 'True'
-                    ws_STH_have_mandi_exchange = True
+                ws_STH_have_mandi_exchange = True
             else: # export error message
                 if exp_error_log:
                     ws_log.insert_rows(2)
@@ -425,11 +423,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 iter_date_OD = tr_date.value
             ws_OD.cell(2, symbol_index+2).value = tr_amount.value
         elif 'QUALIFIED DIVIDEND' in tr_description.value:
-            if ws_OD_have_quali_div == False:
-                ws_OD.cell(ws_OD.max_row+1, 1).value = lang.xls_msg_italic_qual_div
-                ws_OD.cell(ws_OD.max_row+1, 1).font = Font(italic=True)
-                ws_status['A11'] = 'True'
-                ws_OD_have_quali_div = True
+            ws_OD_have_quali_div = True
             if tr_date.value != iter_date_OD:
                 ws_OD.insert_rows(2)  # add new row
                 ws_OD.cell(2, 1).value = date_for_sheet  # date
@@ -437,11 +431,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             ws_OD.cell(2, symbol_index+2).value = tr_amount.value
             ws_OD.cell(2, symbol_index+2).font = Font(italic=True)
         elif 'CASH IN LIEU' in tr_description.value:
-            if ws_OD_have_cashInLieu == False:
-                ws_OD.cell(ws_OD.max_row+1, 1).value = lang.xls_msg_bold_cashInLieu
-                ws_OD.cell(ws_OD.max_row+1, 1).font = Font(bold=True)
-                ws_status['A14'] = 'True'
-                ws_OD_have_cashInLieu = True
+            ws_OD_have_cashInLieu = True
             if tr_date.value != iter_date_OD:
                 ws_OD.insert_rows(2)  # add new row
                 ws_OD.cell(2, 1).value = date_for_sheet  # date
@@ -449,29 +439,21 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             ws_OD.cell(2, symbol_index+2).value = tr_amount.value
             ws_OD.cell(2, symbol_index+2).font = Font(bold=True)
         elif 'DIVIDEND SHORT SALE' in tr_description.value:
-            if ws_OD_have_div_short == False:
-                ws_OD.cell(ws_OD.max_row+1, 1).value = lang.xls_msg_red_div_short
-                ws_OD.cell(ws_OD.max_row+1, 1).font = Font(color='FF0000')
-                ws_status['A17'] = 'True'
-                ws_OD_have_div_short = True
+            ws_OD_have_div_short = True
             if tr_date.value != iter_date_OD:
                 ws_OD.insert_rows(2)  # add new row
                 ws_OD.cell(2, 1).value = date_for_sheet  # date
                 iter_date_OD = tr_date.value
             ws_OD.cell(2, symbol_index+2).value = tr_amount.value
-            ws_OD.cell(2, symbol_index+2).font = Font(color='FF0000')
+            ws_OD.cell(2, symbol_index+2).font = Font(color=colors.RED)
         elif 'NON-TAXABLE DIVIDENDS' in tr_description.value:
-            if ws_OD_have_nontax_div == False:
-                ws_OD.cell(ws_OD.max_row+1, 1).value = lang.xls_msg_blue_nontax_div
-                ws_OD.cell(ws_OD.max_row+1, 1).font = Font(color='00B0F0')
-                ws_status['A20'] = 'True'
-                ws_OD_have_nontax_div = True
+            ws_OD_have_nontax_div = True
             if tr_date.value != iter_date_OD:
                 ws_OD.insert_rows(2)  # add new row
                 ws_OD.cell(2, 1).value = date_for_sheet  # date
                 iter_date_OD = tr_date.value
             ws_OD.cell(2, symbol_index+2).value = tr_amount.value
-            ws_OD.cell(2, symbol_index+2).font = Font(color='00B0F0')
+            ws_OD.cell(2, symbol_index+2).font = Font(color=colors.BLUE)
         # withholding
         elif 'WITHHOLDING' in tr_description.value:            
             if tr_symbol.value == None: # export error message
@@ -516,14 +498,47 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
     # record symbol list and quantity for this batch of trading history
     ws_status['A2'] = ','.join(symbol_list)
     ws_status['A5'] = len(symbol_list)
-    # opt_sheet_list = lang.xls_opt_sheet_names
-    # if any([ws_OD_have_quali_div, ws_OD_have_cashInLieu, ws_OD_have_div_short, ws_OD_have_nontax_div]) and not opt_sheet_list[0] in wb.sheetnames:
-    #     wb.create_sheet(opt_sheet_list[0])
-    #     ws_remark = wb[opt_sheet_list[0]]
-    #     ws_remark.protection.sheet = True
     
+    # create sheet for excel remark
+    opt_sheet_list = lang.xls_opt_sheet_names
+    if any([ws_STH_have_inter_trans, ws_STH_have_mandi_exchange, ws_OD_have_quali_div, ws_OD_have_cashInLieu, ws_OD_have_div_short, ws_OD_have_nontax_div]) and not opt_sheet_list[0] in wb.sheetnames:
+        wb.create_sheet(opt_sheet_list[0], index=5)
+        ws_remark = wb[opt_sheet_list[0]]
+        ws_remark['A1'] = sheet_list[0]
+        for i in range(1,5):
+            ws_remark.cell(1, i).fill= PatternFill(fgColor=st.xls_fmt_color_for_even_column, fill_type="solid")
+        ws_remark['A5'] = sheet_list[1]
+        for i in range(1,5):
+            ws_remark.cell(5, i).fill= PatternFill(fgColor=st.xls_fmt_color_for_odd_column, fill_type="solid")
+        ws_remark.protection.sheet = True
+    if ws_STH_have_inter_trans:
+        ws_remark['A2'] = lang.xls_msg_bold_indication_ITA
+        ws_remark['A2'].font = Font(bold=True)
+        ws_status['A8'] = 'True'
+    if ws_STH_have_mandi_exchange:
+        ws_remark['A3'] = lang.xls_msg_italic_mandi_exchange
+        ws_remark['A3'].font = Font(italic=True)
+        ws_status['A23'] = 'True'
+    if ws_OD_have_quali_div:
+        ws_remark['A6'] = lang.xls_msg_italic_qual_div
+        ws_remark['A6'].font = Font(italic=True)
+        ws_status['A11'] = 'True'
+    if ws_OD_have_cashInLieu:
+        ws_remark['A7'] = lang.xls_msg_bold_cashInLieu
+        ws_remark['A7'].font = Font(bold=True)
+        ws_status['A14'] = 'True'
+    if ws_OD_have_div_short:
+        ws_remark['A8'] = lang.xls_msg_red_div_short
+        ws_remark['A8'].font = Font(color=colors.RED)
+        ws_status['A17'] = 'True'
+    if ws_OD_have_nontax_div:
+        ws_remark['A9'] = lang.xls_msg_blue_nontax_div
+        ws_remark['A9'].font = Font(color=colors.BLUE)
+        ws_status['A20'] = 'True'
+    
+    ws_tran.title = 'transactions(DONE)'
+
     #// TODO: performance optimization required: need a new approach to set the cell color
-    #// BUG: cell color setting is wrong
     # setting cell color
     for k in range(len(symbol_list)):
         if k % 2 == 0:
@@ -559,6 +574,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             fileNameRev = file + '_r' + str(file_version) + ext
 
     wb.save(fileNameRev)  # save processed file
+    wb.close()
     return error_log_qty
     
 # Main Program
@@ -586,11 +602,20 @@ def main(window, st, lang):
                     # sg.popup("File not exist!") # build-in pipup window
                     MessageBox(None, xls_fileName + ' ' + lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
                 else:
-                    error_qty = excelProcessor(xls_fileName, values['exp error log'], st, lang, [])                
-                    if error_qty != 0:
+                    error_qty = excelProcessor(xls_fileName, values['exp error log'], st, lang, [])
+                    if error_qty > 0:
                         MessageBox(None, lang.log_msg_found_error.replace('-xx-', str(error_qty)), lang.msg_box_file_op_title, 0)
-                    window.Element('it_filePath').Update('')
-                    window.Element('Result').Update(lang.gui_success)  #showing process result
+                        window.Element('it_filePath').Update('')
+                        window.Element('Result').Update(lang.gui_success)  #showing process result
+                    elif error_qty == 0:
+                        window.Element('it_filePath').Update('')
+                        window.Element('Result').Update(lang.gui_success)  #showing process result
+                    elif error_qty == -1:
+                        MessageBox(None, lang.msg_box_trading_sht_not_exist, lang.msg_box_file_op_title, 0)
+                        window.Element('Result').Update(lang.msg_box_trading_sht_not_exist)  #showing error message
+                    elif error_qty == -2:
+                        MessageBox(None, lang.msg_box_file_processed, lang.msg_box_file_op_title, 0)
+                        window.Element('Result').Update(lang.msg_box_file_processed)  #showing error message
         elif event is None or event == 'Exit':
             window.Close()
             return False, 'settings.json'

@@ -2,6 +2,16 @@
 
 ## Changelog
 
+* Beta 1.2 (2020-01-08)
+    * NEW: implement more trading types sorting function (thanks threeSecGun from PTT)
+    * NEW: moving the note for transactions type to new remark sheet
+    * NEW: implement file status check function in excelProcessor()
+    * NEW: implement handing the error code function after click process history button
+    * NEW: localization for file status sheet
+    * NEW: optimize processing the custom symbol input function
+    * NEW: move setting cells color code to a better understanding position
+    * UPDATE: change the name of some variables for better code understanding
+
 * Beta 1.1 (2020-01-06)
     * NEW: implement more trading types sorting function (thanks threeSecGun from PTT)
     * NEW: skip not important record feature
