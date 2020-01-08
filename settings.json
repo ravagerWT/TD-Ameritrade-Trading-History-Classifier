@@ -29,5 +29,13 @@
         "color_for_odd_column": "FFF2CC",
         "color_for_even_column": "E2EFDA",
         "display_date_format": "%Y/%m/%d"
-    }
+    },
+    "xls_skip_event": [
+        "ADR FEE",
+        "OFF-CYCLE INTEREST",
+        "MARGIN INTEREST ADJUSTMENT",
+        "FREE BALANCE INTEREST ADJUSTMENT",
+        "LONG TERM GAIN DISTRIBUTION",
+        "SHORT TERM CAPITAL GAINS"
+    ]
 }

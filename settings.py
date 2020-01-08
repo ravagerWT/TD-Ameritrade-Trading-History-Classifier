@@ -36,6 +36,9 @@ class Thfset:
         # date format shall follow the instruction in https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
         self.xls_fmt_display_date_format = data['xls_fmt']['display_date_format']
 
+        # excel skip event list
+        self.xls_skip_event = data['xls_skip_event']
+
     def updateSettings(self):
         """[update setting instance]
         

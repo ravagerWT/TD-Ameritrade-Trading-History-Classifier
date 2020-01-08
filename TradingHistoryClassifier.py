@@ -183,7 +183,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
     ws_tran = wb["transactions"]
     ws_STH = wb[sheet_list[0]]
     ws_OD = wb[sheet_list[1]]
-    ws_W8 = wb[sheet_list[2]]
+    ws_WH = wb[sheet_list[2]]
     ws_WI = wb[sheet_list[3]]
     ws_ver = wb[sheet_list[4]]
     ws_log = wb[sheet_list[5]]
@@ -193,9 +193,9 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
 
     # setting excel sheets layout
     title_date = lang.xls_tt_date
-    ws_STH['A2'] = title_date # Sorted trade history
-    ws_OD['A1'] = title_date # ORDINARY DIVIDEND
-    ws_W8['A1'] = title_date # W-8 WITHHOLDING
+    ws_STH['A2'] = title_date # Sorted trading history
+    ws_OD['A1'] = title_date # DIVIDEND
+    ws_WH['A1'] = title_date # WITHHOLD
     ws_WI['A1'] = title_date # WIRING INFO
     ws_WI['B1'] = lang.xls_tt_amount
     ws_ver['A1'] = title_date # Ver
@@ -207,17 +207,24 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
     ws_status['A7'] = 'INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES'
     ws_status['A10'] = 'QUALIFIED DIVIDEND'
     ws_status['A13'] = 'CASH IN LIEU'
+    ws_status['A16'] = 'DIVIDEND SHORT SALE'
+    ws_status['A19'] = 'NON-TAXABLE DIVIDENDS'
+    ws_status['A22'] = 'MANDATORY - EXCHANGE'
 
     # start sheets process
     iter_date_STH = ''
     iter_date_OD = ''
-    iter_date_W8 = ''
+    iter_date_WH = ''
     # iter_date_WI = ''
     # check file status before process
     if ws_status.cell(1, 8).value == None or ws_status.cell(1, 8).value == 'False':
         ws_STH_have_inter_trans = False
     elif ws_status.cell(1, 8).value == 'True':
         ws_STH_have_inter_trans = True
+    if ws_status['A23'].value == None or ws_status['A23'].value == 'False':
+        ws_STH_have_mandi_exchange = False
+    elif ws_status['A23'].value == 'True':
+        ws_STH_have_mandi_exchange = True
     if ws_status.cell(1, 11).value == None or ws_status.cell(1, 11).value == 'False':
         ws_OD_have_quali_div = False
     elif ws_status.cell(1, 11).value == 'True':
@@ -226,6 +233,14 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         ws_OD_have_cashInLieu = False
     elif ws_status.cell(1, 14).value == 'True':
         ws_OD_have_cashInLieu = True
+    if ws_status['A17'].value == None or ws_status['A17'].value == 'False':
+        ws_OD_have_div_short = False
+    elif ws_status['A17'].value == 'True':
+        ws_OD_have_div_short = True
+    if ws_status['A20'].value == None or ws_status['A20'].value == 'False':
+        ws_OD_have_nontax_div = False
+    elif ws_status['A20'].value == 'True':
+        ws_OD_have_nontax_div = True
     
     # retrieve symbol list from file
     if ws_status['A2'].value != None:
@@ -256,8 +271,8 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             ws_OD.cell(1, symbol_index+2).value = tr_symbol
             ws_OD.cell(1, symbol_index+2).alignment = Alignment(
                 horizontal="center", vertical="center")  # centering text
-            ws_W8.cell(1, symbol_index+2).value = tr_symbol
-            ws_W8.cell(1, symbol_index+2).alignment = Alignment(
+            ws_WH.cell(1, symbol_index+2).value = tr_symbol
+            ws_WH.cell(1, symbol_index+2).alignment = Alignment(
                 horizontal="center", vertical="center")  # centering text
 
     for i in range(2, ws_tran.max_row):
@@ -288,11 +303,12 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 ws_OD.cell(1, symbol_index+2).value = tr_symbol.value
                 ws_OD.cell(1, symbol_index+2).alignment = Alignment(
                     horizontal="center", vertical="center")  # centering text
-                ws_W8.cell(1, symbol_index+2).value = tr_symbol.value
-                ws_W8.cell(1, symbol_index+2).alignment = Alignment(
+                ws_WH.cell(1, symbol_index+2).value = tr_symbol.value
+                ws_WH.cell(1, symbol_index+2).alignment = Alignment(
                     horizontal="center", vertical="center")  # centering text
 
-        # sorting trade history by the description of transactions
+        # sorting trading history by the description of transactions
+        # cash flows
         if 'WIRE INCOMING' in tr_description.value:
             ws_WI.insert_rows(2)  # add new row
             ws_WI.cell(2, 1).value = date_for_sheet  # date
@@ -325,6 +341,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
             if ws_WI.cell(1, 3).value == None:
                 ws_WI.cell(1, 3).value = lang.xls_tt_remark
             ws_WI.cell(2, 3).value = lang.xls_msg_rebate
+        # transaction
         elif 'Bought' in tr_description.value or 'Sold' in tr_description.value:
             if tr_symbol.value in symbol_list:
                 symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
@@ -354,7 +371,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 ws_STH.cell(3, symbol_index*4+3).value = tr_price.value
                 ws_STH.cell(3, symbol_index*4+4).value = tr_fee.value
                 ws_STH.cell(3, symbol_index*4+5).value = tr_amount.value
-                # change to italic to indicate INTERNAL TRANSFER
+                # change to bold to indicate INTERNAL TRANSFER
                 ws_STH.cell(3, symbol_index*4+2).font = Font(bold=True)
                 ws_STH.cell(3, symbol_index*4+3).font = Font(bold=True)
                 ws_STH.cell(3, symbol_index*4+4).font = Font(bold=True)
@@ -371,6 +388,35 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                     temp_msg = lang.log_msg_transaction_symbol_missing
                     ws_log.cell(2, 2).value = (temp_msg.replace('-symbol-', tr_symbol.value)).replace('-xx-', str(i))
                     error_log_qty += 1
+        elif 'MANDATORY - EXCHANGE' in tr_description.value:
+            if tr_symbol.value in symbol_list:
+                symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
+                if tr_date.value != iter_date_STH or ws_STH.cell(3, symbol_index*4 + 2).value != None:
+                    ws_STH.insert_rows(3)  # add new row
+                    ws_STH.cell(3, 1).value = date_for_sheet  # date
+                    iter_date_STH = tr_date.value
+                ws_STH.cell(3, symbol_index*4+2).value = tr_qty.value
+                ws_STH.cell(3, symbol_index*4+3).value = tr_price.value
+                ws_STH.cell(3, symbol_index*4+4).value = tr_fee.value
+                ws_STH.cell(3, symbol_index*4+5).value = tr_amount.value
+                # change to italic to indicate MANDATORY - EXCHANGE
+                ws_STH.cell(3, symbol_index*4+2).font = Font(italic=True)
+                ws_STH.cell(3, symbol_index*4+3).font = Font(italic=True)
+                ws_STH.cell(3, symbol_index*4+4).font = Font(italic=True)
+                ws_STH.cell(3, symbol_index*4+5).font = Font(italic=True)
+                if ws_STH.cell(ws_STH.max_row+1, 1).value == None and ws_STH_have_mandi_exchange == False:
+                    ws_STH.cell(ws_STH.max_row+1, 1).value = lang.xls_msg_italic_mandi_exchange
+                    ws_STH.cell(ws_STH.max_row+1, 1).font = Font(italic=True)
+                    ws_status['A23'] = 'True'
+                    ws_STH_have_mandi_exchange = True
+            else: # export error message
+                if exp_error_log:
+                    ws_log.insert_rows(2)
+                    ws_log.cell(2, 1).value = lang.log_evt_transaction_symbol_missing
+                    temp_msg = lang.log_msg_transaction_symbol_missing
+                    ws_log.cell(2, 2).value = (temp_msg.replace('-symbol-', tr_symbol.value)).replace('-xx-', str(i))
+                    error_log_qty += 1
+        # dividend
         elif 'ORDINARY DIVIDEND' in tr_description.value:
             symbol_index = symbol_list.index(tr_symbol.value) # get index value in list
             if tr_date.value != iter_date_OD:
@@ -402,6 +448,31 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 iter_date_OD = tr_date.value
             ws_OD.cell(2, symbol_index+2).value = tr_amount.value
             ws_OD.cell(2, symbol_index+2).font = Font(bold=True)
+        elif 'DIVIDEND SHORT SALE' in tr_description.value:
+            if ws_OD_have_div_short == False:
+                ws_OD.cell(ws_OD.max_row+1, 1).value = lang.xls_msg_red_div_short
+                ws_OD.cell(ws_OD.max_row+1, 1).font = Font(color='FF0000')
+                ws_status['A17'] = 'True'
+                ws_OD_have_div_short = True
+            if tr_date.value != iter_date_OD:
+                ws_OD.insert_rows(2)  # add new row
+                ws_OD.cell(2, 1).value = date_for_sheet  # date
+                iter_date_OD = tr_date.value
+            ws_OD.cell(2, symbol_index+2).value = tr_amount.value
+            ws_OD.cell(2, symbol_index+2).font = Font(color='FF0000')
+        elif 'NON-TAXABLE DIVIDENDS' in tr_description.value:
+            if ws_OD_have_nontax_div == False:
+                ws_OD.cell(ws_OD.max_row+1, 1).value = lang.xls_msg_blue_nontax_div
+                ws_OD.cell(ws_OD.max_row+1, 1).font = Font(color='00B0F0')
+                ws_status['A20'] = 'True'
+                ws_OD_have_nontax_div = True
+            if tr_date.value != iter_date_OD:
+                ws_OD.insert_rows(2)  # add new row
+                ws_OD.cell(2, 1).value = date_for_sheet  # date
+                iter_date_OD = tr_date.value
+            ws_OD.cell(2, symbol_index+2).value = tr_amount.value
+            ws_OD.cell(2, symbol_index+2).font = Font(color='00B0F0')
+        # withholding
         elif 'WITHHOLDING' in tr_description.value:            
             if tr_symbol.value == None: # export error message
                 if exp_error_log:
@@ -410,17 +481,32 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                     ws_log.cell(2, 2).value = lang.log_msg_withholding_symbol_missing.replace('-xx-', str(i))
                     error_log_qty += 1
             else:
-                if tr_date.value != iter_date_W8:
-                    ws_W8.insert_rows(2)  # add new row
-                    ws_W8.cell(2, 1).value = date_for_sheet  # date
-                    iter_date_W8 = tr_date.value
-                ws_W8.cell(2, symbol_index+2).value = tr_amount.value
-        elif 'MARGIN INTEREST' in tr_description.value or 'ADR FEE' in tr_description.value or 'OFF-CYCLE INTEREST' in tr_description.value:
+                if tr_date.value != iter_date_WH:
+                    ws_WH.insert_rows(2)  # add new row
+                    ws_WH.cell(2, 1).value = date_for_sheet  # date
+                    iter_date_WH = tr_date.value
+                ws_WH.cell(2, symbol_index+2).value = tr_amount.value
+        elif 'FOREIGN TAX WITHHELD' in tr_description.value:            
+            if tr_symbol.value == None: # export error message
+                if exp_error_log:
+                    ws_log.insert_rows(2)
+                    ws_log.cell(2, 1).value = 'FOREIGN TAX WITHHELD'
+                    ws_log.cell(2, 2).value = lang.log_msg_withholding_symbol_missing.replace('-xx-', str(i))
+                    error_log_qty += 1
+            else:
+                if tr_date.value != iter_date_WH:
+                    ws_WH.insert_rows(2)  # add new row
+                    ws_WH.cell(2, 1).value = date_for_sheet  # date
+                    iter_date_WH = tr_date.value
+                ws_WH.cell(2, symbol_index+2).value = tr_amount.value
+        # skip events
+        elif any([keyword in tr_description.value for keyword in st.xls_skip_event]):
             if exp_error_log:
                 ws_log.insert_rows(2)
                 ws_log.cell(2, 1).value = lang.log_evt_event_skip
                 ws_log.cell(2, 2).value = (lang.log_msg_event_skip.replace('-description-', tr_description.value)).replace('-xx-', str(i))
-        else: # export error message
+        # export error message
+        else:
             if exp_error_log:
                 ws_log.insert_rows(2)
                 ws_log.cell(2, 1).value = lang.log_evt_description_keyword_missing
@@ -430,8 +516,14 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
     # record symbol list and quantity for this batch of trading history
     ws_status['A2'] = ','.join(symbol_list)
     ws_status['A5'] = len(symbol_list)
+    # opt_sheet_list = lang.xls_opt_sheet_names
+    # if any([ws_OD_have_quali_div, ws_OD_have_cashInLieu, ws_OD_have_div_short, ws_OD_have_nontax_div]) and not opt_sheet_list[0] in wb.sheetnames:
+    #     wb.create_sheet(opt_sheet_list[0])
+    #     ws_remark = wb[opt_sheet_list[0]]
+    #     ws_remark.protection.sheet = True
     
     #// TODO: performance optimization required: need a new approach to set the cell color
+    #// BUG: cell color setting is wrong
     # setting cell color
     for k in range(len(symbol_list)):
         if k % 2 == 0:
@@ -444,7 +536,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         for row in ws_OD.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_OD.max_row):
             for cell in row:
                 cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
-        for row in ws_W8.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_W8.max_row):
+        for row in ws_WH.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_WH.max_row):
             for cell in row:
                 cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
     

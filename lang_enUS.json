@@ -44,12 +44,15 @@
     "excel": {
         "sheet_names": [
             "Sorted trading history",
-            "ORDINARY DIVIDEND",
-            "W-8 WITHHOLDING",
+            "DIVIDEND",
+            "WITHHOLDING",
             "WIRE TRANSFER INFO",
             "Ver",
             "log",
             "file status"
+        ],
+        "opt_sheet_names": [
+            "Remark"
         ],
         "table_title": {
             "date": "Date",
@@ -69,8 +72,11 @@
             "client_req_e_funding_rec": "CLIENT REQUESTED ELECTRONIC FUNDING RECEIPT",
             "intra_account_transfer": "INTRA-ACCOUNT TRANSFER",
             "bold_indication_ITA": "Bold: INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES",
+            "italic_mandi_exchange": "Italic: MANDATORY - EXCHANGE",
             "italic_qual_div": "Italic: Qualified Dividend",
-            "bold_cashInLieu": "Bold: CASH IN LIEU OF FRACTIONAL SHARES"
+            "red_div_short": "Red: Dividend Short Sale",
+            "blue_nontax_div": "Blue: Non-Taxable Dividends",
+            "bold_cashInLieu": "Bold: Cash In Lieu Of Fractional Shares"
         }
     },
     "xls_error_log": {

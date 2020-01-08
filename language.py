@@ -48,7 +48,8 @@ class Lang:
         self.msg_box_msg_even_col_color_fmt = data['msg_box']['msg_even_col_color_fmt']
 
         # Excel relate
-        self.xls_sheet_names = data['excel']['sheet_names']  # list
+        self.xls_sheet_names = data['excel']['sheet_names']  # sheet list
+        self.xls_opt_sheet_names = data['excel']['opt_sheet_names']  # optional sheet list
 
         self.xls_tt_date = data['excel']['table_title']['date']
         self.xls_tt_quantity = data['excel']['table_title']['quantity']
@@ -67,7 +68,10 @@ class Lang:
         self.xls_msg_client_req_e_funding_rec = data['excel']['msg']['client_req_e_funding_rec']
         self.xls_msg_intra_account_transfer = data['excel']['msg']['intra_account_transfer']
         self.xls_msg_bold_indication_ITA = data['excel']['msg']['bold_indication_ITA']
+        self.xls_msg_italic_mandi_exchange = data['excel']['msg']['italic_mandi_exchange']
         self.xls_msg_italic_qual_div = data['excel']['msg']['italic_qual_div']
+        self.xls_msg_red_div_short = data['excel']['msg']['red_div_short']
+        self.xls_msg_blue_nontax_div = data['excel']['msg']['blue_nontax_div']
         self.xls_msg_bold_cashInLieu = data['excel']['msg']['bold_cashInLieu']
 
         # excel log

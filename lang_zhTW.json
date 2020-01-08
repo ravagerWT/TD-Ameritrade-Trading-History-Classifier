@@ -45,11 +45,14 @@
         "sheet_names": [
             "分類交易記錄",
             "配息記錄",
-            "W-8 預扣稅記錄",
+            "預扣稅記錄",
             "電匯記錄",
             "版本",
             "日誌",
             "檔案狀態"
+        ],
+        "opt_sheet_names": [
+            "備註"
         ],
         "table_title": {
             "date": "日期",
@@ -69,8 +72,11 @@
             "client_req_e_funding_rec": "客戶要求電匯轉入",
             "intra_account_transfer": "帳戶內轉帳",
             "bold_indication_ITA": "粗體: INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES",
+            "italic_mandi_exchange": "斜體: MANDATORY - EXCHANGE",
             "italic_qual_div": "斜體: Qualified Dividend",
-            "bold_cashInLieu": "粗體: CASH IN LIEU OF FRACTIONAL SHARES"
+            "red_div_short": "紅色: Dividend Short Sale",
+            "blue_nontax_div": "藍色: Non-Taxable Dividends",
+            "bold_cashInLieu": "粗體: Cash In Lieu Of Fractional Shares"
         }
     },
     "xls_error_log": {
