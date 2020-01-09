@@ -2,6 +2,10 @@
 
 ## Changelog
 
+* Beta 1.3 (2020-01-10)
+    * NEW: implement progress bar to show current status
+    * NEW: allow user to select program GUI themes
+
 * Beta 1.2 (2020-01-08)
     * NEW: implement more trading types sorting function (thanks threeSecGun from PTT)
     * NEW: moving the note for transactions type to new remark sheet

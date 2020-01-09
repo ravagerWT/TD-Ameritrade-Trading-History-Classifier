@@ -143,6 +143,7 @@ def setWindow(lang, st):
                                                                                                  (lang.gui_spreadsheet_files, "*.xlsx"),), key='Browse'),
                sg.Button(lang.gui_process_history, key='Process History'),
                sg.Checkbox(lang.gui_exp_error_log, default=st.gen_exp_error_log, enable_events=True, key='exp error log')],
+              [sg.ProgressBar(100, orientation='h', size=(50,15), auto_size_text=True, key='process status')],
               [sg.Text(lang.gui_result + ':'),
                sg.Text('', size=(20, 1), key='Result')],
               [sg.Text('_' * 100, size=(70, 1))],
@@ -165,7 +166,7 @@ def getXlsFileName(filePath, lang):
         return xls_fileName
 
 # excel processor
-def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
+def excelProcessor(xls_fileName, exp_error_log, st, lang, window, symbol_list = []):
     # sheet_list = ['Sorted trade history','ORDINARY DIVIDEND','W-8 WITHHOLDING','WIRING INFO','Ver','log']
     sheet_list = lang.xls_sheet_names
     error_log_qty = 0
@@ -494,6 +495,9 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
                 ws_log.cell(2, 1).value = lang.log_evt_description_keyword_missing
                 ws_log.cell(2, 2).value = (lang.log_msg_description_keyword_missing.replace('-description-', tr_description.value)).replace('-xx-', str(i))
                 error_log_qty += 1
+        
+        # update progress bar status
+        window.Element('process status').UpdateBar((i+1)/ws_tran.max_row*80)
 
     # record symbol list and quantity for this batch of trading history
     ws_status['A2'] = ','.join(symbol_list)
@@ -554,6 +558,8 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, symbol_list = []):
         for row in ws_WH.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_WH.max_row):
             for cell in row:
                 cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
+        # update progress bar status
+        window.Element('process status').UpdateBar(80+(k+1)/len(symbol_list)*19)
     
     # version control
     file_version = ws_ver['B2'].value  # get current file version
@@ -602,14 +608,18 @@ def main(window, st, lang):
                     # sg.popup("File not exist!") # build-in pipup window
                     MessageBox(None, xls_fileName + ' ' + lang.msg_box_file_not_exist, lang.msg_box_file_op_title, 0)
                 else:
-                    error_qty = excelProcessor(xls_fileName, values['exp error log'], st, lang, [])
+                    error_qty = excelProcessor(xls_fileName, values['exp error log'], st, lang, window, [])
                     if error_qty > 0:
                         MessageBox(None, lang.log_msg_found_error.replace('-xx-', str(error_qty)), lang.msg_box_file_op_title, 0)
                         window.Element('it_filePath').Update('')
                         window.Element('Result').Update(lang.gui_success)  #showing process result
+                        # update progress bar status
+                        window.Element('process status').UpdateBar(100)
                     elif error_qty == 0:
                         window.Element('it_filePath').Update('')
                         window.Element('Result').Update(lang.gui_success)  #showing process result
+                        # update progress bar status
+                        window.Element('process status').UpdateBar(100)
                     elif error_qty == -1:
                         MessageBox(None, lang.msg_box_trading_sht_not_exist, lang.msg_box_file_op_title, 0)
                         window.Element('Result').Update(lang.msg_box_trading_sht_not_exist)  #showing error message
