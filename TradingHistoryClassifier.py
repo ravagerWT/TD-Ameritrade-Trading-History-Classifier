@@ -49,6 +49,8 @@ def editSetting(st, lang):
     layout = [
         [sg.Text(lang.st_localization), sg.InputCombo(st.gen_ava_lang_for_GUI, size=(
             20, 1), default_value=st.gen_set_lang, key='set_lang', readonly=True)],
+        [sg.Text(lang.st_gui_theme + ': '), sg.InputCombo(sg.list_of_look_and_feel_values(), size=(
+            20, 1), default_value=st.gen_gui_theme, key='gui_theme', readonly=True)],
         [sg.Text('_' * 100, size=(55, 1))],
         [sg.Text(lang.st_xls_fmt_setting)],
         [sg.Text(lang.st_odd_col_color, size=(18, 1)), sg.InputText(st.xls_fmt_color_for_odd_column, key='odd_col_color')],
@@ -66,8 +68,15 @@ def editSetting(st, lang):
         print('event: ', event, '\nvalues:', values)  # debug message
         if event == 'OK':
             # check whether any setting change or not
-            if values['set_lang'] != st.gen_set_lang or values['odd_col_color'] != st.xls_fmt_color_for_odd_column or values['even_col_color'] != st.xls_fmt_color_for_even_column or values['date_fmt'] != st.xls_fmt_display_date_format:
+            st_chk1 = values['set_lang'] != st.gen_set_lang
+            st_chk2 = values['gui_theme'] != st.gen_gui_theme
+            st_chk3 = values['odd_col_color'] != st.xls_fmt_color_for_odd_column
+            st_chk4 = values['even_col_color'] != st.xls_fmt_color_for_even_column
+            st_chk5 = values['date_fmt'] != st.xls_fmt_display_date_format
+            st_chk6 = values['backup_settings'] != st.gen_backup_setting
+            if any([st_chk1, st_chk2, st_chk3, st_chk4, st_chk5, st_chk6]):
                 st.gen_set_lang = values['set_lang']
+                st.gen_gui_theme = values['gui_theme']
                 # https://stackoverflow.com/questions/30241375/python-how-to-check-if-string-is-a-hex-color-code
                 # check whether the input values satisfy the format
                 if re.search(r'^(?:[0-9a-fA-F]{3}){1,2}$', values['odd_col_color']):
@@ -129,6 +138,7 @@ def loadLang(lang_code='English (enUS)'):
 
 # setup window layout
 def setWindow(lang, st):
+    sg.change_look_and_feel(st.gen_gui_theme)  # windows colorful
     # setup window layout
     layout = [[sg.Text(lang.gui_program_setting + ':')],
               [sg.Text(lang.gui_file + ':', justification='right'),
@@ -632,7 +642,6 @@ def main(window, st, lang):
 
 if __name__ == '__main__':
     continue_program = True
-    sg.change_look_and_feel('Dark Blue 3')  # windows colorful
     MessageBox = ctypes.windll.user32.MessageBoxW
     setting_file_name = 'settings.json'
     while continue_program:

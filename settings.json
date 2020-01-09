@@ -9,6 +9,7 @@
             "English (enUS)",
             "繁體中文 台灣 (zhTW)"
         ],
+        "gui_theme": "DarkBlue3",
         "record_last_transaction_file": false,
         "last_transaction_file_path": "",
         "setting_file_path": "",

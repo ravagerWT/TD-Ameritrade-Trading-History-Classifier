@@ -30,6 +30,7 @@ class Lang:
         # GUI-settings
         self.st_setting_window_title = data['settings']['setting_window_title']
         self.st_localization = data['settings']['localization']
+        self.st_gui_theme = data['settings']['gui_theme']
         self.st_xls_fmt_setting = data['settings']['xls_fmt_setting']
         self.st_odd_col_color = data['settings']['odd_col_color']
         self.st_even_col_color = data['settings']['even_col_color']

@@ -24,6 +24,7 @@
     "settings": {
         "setting_window_title": "程式設定",
         "localization": "介面語言: ",
+        "gui_theme": "佈景主題",
         "xls_fmt_setting": "Excel格式設定: ",
         "odd_col_color": "奇數欄位顏色 (Hex):",
         "even_col_color": "偶數欄位顏色 (Hex):",

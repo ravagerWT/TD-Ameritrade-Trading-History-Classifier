@@ -4,7 +4,7 @@
 
 * Beta 1.3 (2020-01-10)
     * NEW: implement progress bar to show current status
-    * NEW: allow user to select program GUI themes
+    * NEW: allow user to select the theme of program GUI
 
 * Beta 1.2 (2020-01-08)
     * NEW: implement more trading types sorting function (thanks threeSecGun from PTT)

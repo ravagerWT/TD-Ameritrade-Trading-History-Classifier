@@ -14,6 +14,7 @@ class Thfset:
         # program general settings
         self.gen_set_lang = data['general']['set_lang']
         self.gen_ava_lang_for_GUI = data['general']['ava_lang_for_GUI']
+        self.gen_gui_theme = data['general']['gui_theme']
         self.gen_record_last_transaction_file = data['general']['record_last_transaction_file'] # not used
         self.gen_last_transaction_file_path = data['general']['last_transaction_file_path'] # not used
         self.gen_setting_file_path = data['general']['setting_file_path'] # not used
@@ -49,6 +50,7 @@ class Thfset:
         self.data['ver_info']['date'] = self.ver_info_date
 
         self.data['general']['set_lang'] = self.gen_set_lang
+        self.data['general']['gui_theme'] = self.gen_gui_theme
         self.data['general']['record_last_transaction_file'] = self.gen_record_last_transaction_file
         self.data['general']['last_transaction_file_path'] = self.gen_last_transaction_file_path
         self.data['general']['backup_setting'] = self.gen_backup_setting

@@ -24,6 +24,7 @@
     "settings": {
         "setting_window_title": "Program Settings",
         "localization": "Localization: ",
+        "gui_theme": "GUI Theme",
         "xls_fmt_setting": "Excel format setting: ",
         "odd_col_color": "Odd column color (Hex):",
         "even_col_color": "Even column color (Hex):",
