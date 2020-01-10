@@ -10,6 +10,7 @@ import ctypes
 from datetime import datetime, date, time
 import re
 import json
+import webbrowser
 import settings
 import language
 
@@ -19,6 +20,7 @@ import language
 # openpyxl.utils.cell.get_column_letter(3) // C
 
 program_ver = 'Beta 1.2'
+author = 'RavagerWT'
 
 # load program setting from settings.json
 def loadSetting(setting_file_name='settings.json'):
@@ -47,6 +49,8 @@ def editSetting(st, lang):
     even_color_status = False
     # GUI layout
     layout = [
+        [sg.Text(lang.st_author+': ' + author), sg.Button(lang.st_website, key='website')],
+        [sg.Text('_' * 100, size=(55, 1))],
         [sg.Text(lang.st_localization), sg.InputCombo(st.gen_ava_lang_for_GUI, size=(
             20, 1), default_value=st.gen_set_lang, key='set_lang', readonly=True)],
         [sg.Text(lang.st_gui_theme + ': '), sg.InputCombo(sg.list_of_look_and_feel_values(), size=(
@@ -56,7 +60,7 @@ def editSetting(st, lang):
         [sg.Text(lang.st_odd_col_color, size=(18, 1)), sg.InputText(st.xls_fmt_color_for_odd_column, key='odd_col_color')],
         [sg.Text(lang.st_even_col_color, size=(18, 1)), sg.InputText(st.xls_fmt_color_for_even_column, key='even_col_color')],
         [sg.Text(lang.st_disp_date_fmt, size=(18, 1)), sg.InputText(st.xls_fmt_display_date_format, key='date_fmt')],        
-        [sg.Button(lang.st_ok, key='OK'), sg.Cancel(lang.st_cancel, key='Cancel'), sg.Checkbox(lang.st_backup_settings, default=st.gen_backup_setting, enable_events=True, key='backup_settings')]
+        [sg.Checkbox(lang.st_backup_settings, default=st.gen_backup_setting, enable_events=True, key='backup_settings'), sg.Button(lang.st_ok, key='OK'), sg.Cancel(lang.st_cancel, key='Cancel')]
     ]
     
     window = sg.Window(lang.st_setting_window_title, auto_size_text=True,
@@ -104,6 +108,8 @@ def editSetting(st, lang):
                            lang.msg_box_file_op_title, 0)
                 window.close()
                 return False
+        elif event == 'website':
+            webbrowser.open(st.pgm_info_website)
         elif event is None or event == 'Cancel':
             window.close()
             return False

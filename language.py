@@ -38,6 +38,8 @@ class Lang:
         self.st_ok = data['settings']['ok']
         self.st_cancel = data['settings']['cancel']
         self.st_backup_settings = data['settings']['backup_settings']
+        self.st_author = data['settings']['author']
+        self.st_website = data['settings']['website']
 
         # msg box
         self.msg_box_file_op_title = data['msg_box']['file_op_title']

@@ -31,7 +31,9 @@
         "disp_date_fmt": "Display date format:",
         "ok": "OK",
         "cancel": "Cancel",
-        "backup_settings": "Backup settings"
+        "backup_settings": "Backup settings",
+        "author": "Author",
+        "website": "Officail Website"
     },
     "msg_box": {
         "file_op_title": "File Operation",

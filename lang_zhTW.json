@@ -31,7 +31,9 @@
         "disp_date_fmt": "顯示日期格式:",
         "ok": "確定",
         "cancel": "取消",
-        "backup_settings": "備份設定檔"
+        "backup_settings": "備份設定檔",
+        "author": "作者",
+        "website": "官方網站"
     },
     "msg_box": {
         "file_op_title": "檔案操作",

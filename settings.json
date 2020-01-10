@@ -1,4 +1,7 @@
 {
+    "program_info": {
+        "website": "https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier"
+    },
     "ver_info": {
         "ver": 0,
         "date": "2020/01/02"
