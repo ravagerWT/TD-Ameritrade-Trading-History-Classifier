@@ -11,6 +11,7 @@ from datetime import datetime, date, time
 import re
 import json
 import webbrowser
+import urllib.request
 import settings
 import language
 
@@ -19,7 +20,7 @@ import language
 # openpyxl.utils.cell.coordinate_to_tuple('B3')  // (3, 2)
 # openpyxl.utils.cell.get_column_letter(3) // C
 
-program_ver = 'Beta 1.2'
+program_ver = 'Beta 1.3'
 author = 'RavagerWT'
 
 # load program setting from settings.json
@@ -49,7 +50,7 @@ def editSetting(st, lang):
     even_color_status = False
     # GUI layout
     layout = [
-        [sg.Text(lang.st_author+': ' + author), sg.Button(lang.st_website, key='website')],
+        [sg.Text(lang.st_author+': ' + author), sg.Button(lang.st_check_update, key='check update'), sg.Button(lang.st_website, key='website')],
         [sg.Text('_' * 100, size=(55, 1))],
         [sg.Text(lang.st_localization), sg.InputCombo(st.gen_ava_lang_for_GUI, size=(
             20, 1), default_value=st.gen_set_lang, key='set_lang', readonly=True)],
@@ -108,6 +109,16 @@ def editSetting(st, lang):
                            lang.msg_box_file_op_title, 0)
                 window.close()
                 return False
+        elif event == 'check update':
+            link = 'https://raw.githubusercontent.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier/master/CHANGELOG.md'
+            changelog_in_line = [each_line for each_line in urllib.request.urlopen(link)]
+            ver_line = changelog_in_line[4].decode('utf-8')
+            ver = ver_line[:-14].replace('* ', '')
+            if ver == program_ver:
+                MessageBox(None, lang.msg_box_ver_up_to_date, lang.msg_box_chk_update_title, 0)
+            else:
+                MessageBox(None, lang.msg_box_need_update, lang.msg_box_chk_update_title, 0)
+                webbrowser.open(st.pgm_info_download_site)
         elif event == 'website':
             webbrowser.open(st.pgm_info_website)
         elif event is None or event == 'Cancel':

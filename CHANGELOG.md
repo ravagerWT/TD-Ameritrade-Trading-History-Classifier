@@ -5,7 +5,9 @@
 * Beta 1.3 (2020-01-10)
     * NEW: implement progress bar to show current status
     * NEW: allow user to select the theme of program GUI
-    * NEW: implement author and offical website information on setting window
+    * NEW: implement author and offical website information in setting window
+    * NEW: implement check update function in setting window
+    * NEW: add screenshots for main and setting window
 
 * Beta 1.2 (2020-01-08)
     * NEW: implement more trading types sorting function (thanks threeSecGun from PTT)

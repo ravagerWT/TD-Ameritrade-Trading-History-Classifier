@@ -9,6 +9,7 @@ class Thfset:
 
         # program information
         self.pgm_info_website = data['program_info']['website']
+        self.pgm_info_download_site = data['program_info']['download_site']
 
         # setting version
         self.ver_info_ver = data['ver_info']['ver']

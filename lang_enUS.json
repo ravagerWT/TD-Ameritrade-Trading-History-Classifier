@@ -22,6 +22,9 @@
         "ver": "Ver"
     },
     "settings": {
+        "author": "Author",
+        "check_update": "Check update",
+        "website": "Official Website",
         "setting_window_title": "Program Settings",
         "localization": "Localization: ",
         "gui_theme": "GUI Theme",
@@ -29,11 +32,9 @@
         "odd_col_color": "Odd column color (Hex):",
         "even_col_color": "Even column color (Hex):",
         "disp_date_fmt": "Display date format:",
-        "ok": "OK",
-        "cancel": "Cancel",
         "backup_settings": "Backup settings",
-        "author": "Author",
-        "website": "Officail Website"
+        "ok": "OK",
+        "cancel": "Cancel"
     },
     "msg_box": {
         "file_op_title": "File Operation",
@@ -44,7 +45,10 @@
         "settings_file_not_change": "The settings file has not changed!",
         "color_fmt_wrong_title": "Color Format Wrong",
         "msg_odd_col_color_fmt": "Odd column color format is worng",
-        "msg_even_col_color_fmt": "Even column color format is worng"
+        "msg_even_col_color_fmt": "Even column color format is worng",
+        "chk_update_title": "Check Program Version",
+        "ver_up_to_date": "Your program is up to date!",
+        "need_update": "There is a new version of the program, please go to the official website to download!"
     },
     "excel": {
         "sheet_names": [

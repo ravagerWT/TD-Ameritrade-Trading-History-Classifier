@@ -1,10 +1,11 @@
 {
     "program_info": {
-        "website": "https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier"
+        "website": "https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier",
+        "download_site": "https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier/releases"
     },
     "ver_info": {
-        "ver": 0,
-        "date": "2020/01/02"
+        "ver": 1,
+        "date": "2020/01/11"
     },
     "general": {
         "set_lang": "English (enUS)",

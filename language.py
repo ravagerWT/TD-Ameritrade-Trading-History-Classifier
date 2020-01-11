@@ -28,6 +28,9 @@ class Lang:
         self.gui_ver = data['GUI']['ver']
 
         # GUI-settings
+        self.st_author = data['settings']['author']
+        self.st_check_update = data['settings']['check_update']
+        self.st_website = data['settings']['website']
         self.st_setting_window_title = data['settings']['setting_window_title']
         self.st_localization = data['settings']['localization']
         self.st_gui_theme = data['settings']['gui_theme']
@@ -35,11 +38,9 @@ class Lang:
         self.st_odd_col_color = data['settings']['odd_col_color']
         self.st_even_col_color = data['settings']['even_col_color']
         self.st_disp_date_fmt = data['settings']['disp_date_fmt']
+        self.st_backup_settings = data['settings']['backup_settings']
         self.st_ok = data['settings']['ok']
         self.st_cancel = data['settings']['cancel']
-        self.st_backup_settings = data['settings']['backup_settings']
-        self.st_author = data['settings']['author']
-        self.st_website = data['settings']['website']
 
         # msg box
         self.msg_box_file_op_title = data['msg_box']['file_op_title']
@@ -51,10 +52,14 @@ class Lang:
         self.msg_box_color_fmt_wrong_title = data['msg_box']['color_fmt_wrong_title']
         self.msg_box_msg_odd_col_color_fmt = data['msg_box']['msg_odd_col_color_fmt']
         self.msg_box_msg_even_col_color_fmt = data['msg_box']['msg_even_col_color_fmt']
+        self.msg_box_chk_update_title = data['msg_box']['chk_update_title']
+        self.msg_box_ver_up_to_date = data['msg_box']['ver_up_to_date']
+        self.msg_box_need_update = data['msg_box']['need_update']
 
         # Excel relate
         self.xls_sheet_names = data['excel']['sheet_names']  # sheet list
-        self.xls_opt_sheet_names = data['excel']['opt_sheet_names']  # optional sheet list
+        # optional sheet list
+        self.xls_opt_sheet_names = data['excel']['opt_sheet_names']
 
         self.xls_tt_date = data['excel']['table_title']['date']
         self.xls_tt_quantity = data['excel']['table_title']['quantity']
