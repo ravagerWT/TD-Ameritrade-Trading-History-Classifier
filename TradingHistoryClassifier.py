@@ -684,6 +684,10 @@ def main(window, st, lang):
                     elif error_qty == -2:
                         MessageBox(None, lang.msg_box_file_processed, lang.msg_box_file_op_title, 0)
                         window.Element('Result').Update(lang.msg_box_file_processed)  #showing error message
+        elif event == 'exp error log':
+            st.gen_exp_error_log = values['exp error log']
+            saveSetting(st.updateSettings(), backup_settings=st.gen_backup_setting)
+            return True, 'settings.json'
         elif event is None or event == 'Exit':
             window.Close()
             return False, 'settings.json'

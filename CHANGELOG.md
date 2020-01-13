@@ -6,6 +6,7 @@
 ## Changelog
 
 * Beta 1.3.1 (2020-01-13)
+    * FIX: Not functional export excel process log checkbox
     * UPDATE: extract check update function to chk_update()
 
 * Beta 1.3 (2020-01-10)
