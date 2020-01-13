@@ -12,6 +12,7 @@ import re
 import json
 import webbrowser
 import urllib.request
+from packaging import version
 import settings
 import language
 
@@ -20,7 +21,7 @@ import language
 # openpyxl.utils.cell.coordinate_to_tuple('B3')  // (3, 2)
 # openpyxl.utils.cell.get_column_letter(3) // C
 
-program_ver = 'Beta 1.3'
+program_ver = 'Beta 1.3.1'
 author = 'RavagerWT'
 
 # load program setting from settings.json
@@ -111,19 +112,49 @@ def editSetting(st, lang):
                 return False
         elif event == 'check update':
             link = 'https://raw.githubusercontent.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier/master/CHANGELOG.md'
-            changelog_in_line = [each_line for each_line in urllib.request.urlopen(link)]
-            ver_line = changelog_in_line[4].decode('utf-8')
-            ver = ver_line[:-14].replace('* ', '')
-            if ver == program_ver:
+            update_status = chk_update(link, program_ver)
+            if update_status == 0:
                 MessageBox(None, lang.msg_box_ver_up_to_date, lang.msg_box_chk_update_title, 0)
-            else:
+            elif update_status == 1:
                 MessageBox(None, lang.msg_box_need_update, lang.msg_box_chk_update_title, 0)
                 webbrowser.open(st.pgm_info_download_site)
+            elif update_status == 2:
+                MessageBox(None, lang.msg_box_runnig_higher_ver_program, lang.msg_box_chk_update_title, 0)
+            elif update_status == -1:
+                MessageBox(None, lang.msg_box_runnig_unofficail_program, lang.msg_box_chk_update_title, 0)
         elif event == 'website':
             webbrowser.open(st.pgm_info_website)
         elif event is None or event == 'Cancel':
             window.close()
             return False
+
+# check whether program require update
+def chk_update(change_log_url, current_ver):
+    update_status = 0
+    # retrieve version info from github
+    changelog_in_line = [each_line for each_line in urllib.request.urlopen(change_log_url)]
+    latest_stable_release = changelog_in_line[2].decode('utf-8')
+    latest_stable_release_ver = version.parse(latest_stable_release[-5:])
+    latest_beta_release = changelog_in_line[3].decode('utf-8')
+    latest_beta_release_ver = version.parse(latest_beta_release[-5:])
+    # processing program version info
+    program_cut_space = current_ver.replace(' ','')
+    program_channel = program_cut_space[:len(program_cut_space)-5]
+    program_ver = version.parse(current_ver[-5:])
+    # comparing version info
+    if program_channel == 'Beta':
+        if program_ver < latest_beta_release_ver:
+            update_status = 1
+        elif program_ver > latest_beta_release_ver:
+            update_status = 2
+    elif program_channel == 'v':
+        if program_ver < latest_stable_release_ver:
+            update_status = 1
+        elif program_ver > latest_stable_release_ver:
+            update_status = 2
+    else:
+        update_status = -1
+    return update_status
 
 # save setting to settings.json
 def saveSetting(settings_obj, backup_settings=False, settings_file_name='settings.json'):

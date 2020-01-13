@@ -1,4 +1,8 @@
 # TD Ameritrade Trading History Classifier
+![Release](https://img.shields.io/github/v/release/ravagerWT/TD-Ameritrade-Trading-History-Classifier)
+![Release Date](https://img.shields.io/github/release-date/ravagerWT/TD-Ameritrade-Trading-History-Classifier)
+![Commits Since](https://img.shields.io/github/commits-since/ravagerWT/TD-Ameritrade-Trading-History-Classifier/latest/develop)
+![License](https://img.shields.io/github/license/ravagerWT/TD-Ameritrade-Trading-History-Classifier)
 
 ![](screenshot/Main%20GUI%20Beta1.3.jpg?raw=true)
 
@@ -76,6 +80,8 @@ Q: How to change program interface language?
 ## ChangeLog
 
 Please see the [CHANGELOG.md](https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier/blob/develop/CHANGELOG.md) file for details.
+
+The version control of this project follows [Semantic Versioning 2.0.0](https://semver.org/) system after Beta 1.3.1.
 
 ## Contributing
 

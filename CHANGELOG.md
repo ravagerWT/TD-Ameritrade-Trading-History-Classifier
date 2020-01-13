@@ -1,6 +1,12 @@
 # TD Ameritrade Trading History Classifier
 
+- Latest Stable Version: None
+- Latest Beta Version: 1.3.1
+
 ## Changelog
+
+* Beta 1.3.1 (2020-01-13)
+    * UPDATE: extract check update function to chk_update()
 
 * Beta 1.3 (2020-01-10)
     * NEW: implement progress bar to show current status

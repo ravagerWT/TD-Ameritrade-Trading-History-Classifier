@@ -55,6 +55,8 @@ class Lang:
         self.msg_box_chk_update_title = data['msg_box']['chk_update_title']
         self.msg_box_ver_up_to_date = data['msg_box']['ver_up_to_date']
         self.msg_box_need_update = data['msg_box']['need_update']
+        self.msg_box_runnig_higher_ver_program = data['msg_box']['runnig_higher_ver_program']
+        self.msg_box_runnig_unofficial_program = data['msg_box']['runnig_unofficial_program']
 
         # Excel relate
         self.xls_sheet_names = data['excel']['sheet_names']  # sheet list
