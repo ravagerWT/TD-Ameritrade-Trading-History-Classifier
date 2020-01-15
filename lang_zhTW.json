@@ -58,7 +58,7 @@
             "分類交易記錄",
             "配息記錄",
             "預扣稅記錄",
-            "電匯記錄",
+            "金流記錄",
             "版本",
             "日誌",
             "檔案狀態"
@@ -69,7 +69,7 @@
         "table_title": {
             "date": "日期",
             "quantity": "交易數量",
-            "symbol": "股票代碼",
+            "symbol": "標的代碼",
             "price": "價格",
             "commission": "手續費",
             "amount": "總額",
@@ -94,20 +94,20 @@
     "xls_error_log": {
         "event": {
             "description_keyword_missing": "交易描述錯誤",
-            "withholding_symbol_missing": "Withholding missing symbol",
-            "transaction_symbol_missing": "Transaction symbol missing",
+            "withholding_symbol_missing": "預扣稅缺少交易標的代碼",
+            "transaction_symbol_missing": "缺少交易標的代碼",
             "event_skip": "忽略記錄"
         },
         "message": {
-            "description_keyword_missing": "未定義交易描述關鍵字: -description- on -xx-th row",
-            "withholding_symbol_missing": "第-xx-列缺少交易代碼",
-            "transaction_symbol_missing": "Not in symbol list: -symbol- on -xx-th row",
+            "description_keyword_missing": "第-xx-列未定義交易描述關鍵字: -description-",
+            "withholding_symbol_missing": "第-xx-列缺少交易標的代碼",
+            "transaction_symbol_missing": "第-xx-列缺少交易標的代碼",
             "event_skip": "第-xx-列-description-記錄已被忽略",
             "found_error": "於交易記錄中發現-xx-個錯誤，請至日誌分頁中檢視詳細訊息!"
         }
     },
     "xls_stat_log": {
-        "sym_list": "股票代號清單",
-        "sym_qty": "股票代號總數"
+        "sym_list": "標的代號清單",
+        "sym_qty": "標的代號總數"
     }
 }

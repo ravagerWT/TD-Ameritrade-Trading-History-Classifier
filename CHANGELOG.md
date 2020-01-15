@@ -5,10 +5,13 @@
 
 ## Changelog
 
-* Beta 1.3.2 (2020-01-14)
+* Beta 1.3.2 (2020-01-15)
     * NEW: adding the instruction for program localization to README.md
-    * FIX: using a new approach to fix the wrong response from chk_update() method
+    * FIX: using a new approach to fix the incorrect behavior in chk_update() method
     * FIX: some typo
+    * FIX: incorrect excel error log exprot behavior in excelProcessor() method
+    * FIX: progress bar incorrect behavior
+    * UPDATE: some sentences for better understanding
 
 * Beta 1.3.1 (2020-01-13)
     * FIX: Not functional export excel process log checkbox

@@ -442,7 +442,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, window, symbol_list = 
                     ws_log.insert_rows(2)
                     ws_log.cell(2, 1).value = lang.log_evt_transaction_symbol_missing
                     temp_msg = lang.log_msg_transaction_symbol_missing
-                    ws_log.cell(2, 2).value = (temp_msg.replace('-symbol-', tr_symbol.value)).replace('-xx-', str(i))
+                    ws_log.cell(2, 2).value = temp_msg.replace('-xx-', str(i))
                     error_log_qty += 1
         elif 'INTERNAL TRANSFER BETWEEN ACCOUNTS OR ACCOUNT TYPES' in tr_description.value:
             if tr_symbol.value in symbol_list:
@@ -466,7 +466,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, window, symbol_list = 
                     ws_log.insert_rows(2)
                     ws_log.cell(2, 1).value = lang.log_evt_transaction_symbol_missing
                     temp_msg = lang.log_msg_transaction_symbol_missing
-                    ws_log.cell(2, 2).value = (temp_msg.replace('-symbol-', tr_symbol.value)).replace('-xx-', str(i))
+                    ws_log.cell(2, 2).value = temp_msg.replace('-xx-', str(i))
                     error_log_qty += 1
         elif 'MANDATORY - EXCHANGE' in tr_description.value:
             if tr_symbol.value in symbol_list:
@@ -490,7 +490,7 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, window, symbol_list = 
                     ws_log.insert_rows(2)
                     ws_log.cell(2, 1).value = lang.log_evt_transaction_symbol_missing
                     temp_msg = lang.log_msg_transaction_symbol_missing
-                    ws_log.cell(2, 2).value = (temp_msg.replace('-symbol-', tr_symbol.value)).replace('-xx-', str(i))
+                    ws_log.cell(2, 2).value = temp_msg.replace('-xx-', str(i))
                     error_log_qty += 1
         # dividend
         elif 'ORDINARY DIVIDEND' in tr_description.value:
@@ -687,16 +687,16 @@ def main(window, st, lang):
                 else:
                     error_qty = excelProcessor(xls_fileName, values['exp error log'], st, lang, window, [])
                     if error_qty > 0:
+                        # update progress bar status
+                        window.Element('process status').UpdateBar(100)
                         MessageBox(None, lang.log_msg_found_error.replace('-xx-', str(error_qty)), lang.msg_box_file_op_title, 0)
                         window.Element('it_filePath').Update('')
                         window.Element('Result').Update(lang.gui_success)  #showing process result
+                    elif error_qty == 0:
                         # update progress bar status
                         window.Element('process status').UpdateBar(100)
-                    elif error_qty == 0:
                         window.Element('it_filePath').Update('')
                         window.Element('Result').Update(lang.gui_success)  #showing process result
-                        # update progress bar status
-                        window.Element('process status').UpdateBar(100)
                     elif error_qty == -1:
                         MessageBox(None, lang.msg_box_trading_sht_not_exist, lang.msg_box_file_op_title, 0)
                         window.Element('Result').Update(lang.msg_box_trading_sht_not_exist)  #showing error message
