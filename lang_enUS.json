@@ -49,8 +49,9 @@
         "chk_update_title": "Check Program Version",
         "ver_up_to_date": "Your program is up to date!",
         "need_update": "There is a new version of the program, please go to the official website to download!",
-        "runnig_higher_ver_program": "Currently using version is higher than officail release.  It seems you are using a unofficail program!",
-        "runnig_unofficial_program": "It seems you are using a unofficail program!"
+        "runnig_higher_ver_program": "Currently using version is higher than official release.  It seems you are using an unofficial program!",
+        "runnig_unofficial_program": "It seems you are using an unofficial program!",
+        "release_ver_not_exist": "There is no official release version now.  It seems you are using an unofficial program!"
     },
     "excel": {
         "sheet_names": [

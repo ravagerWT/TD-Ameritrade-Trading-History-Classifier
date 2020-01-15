@@ -49,8 +49,9 @@
         "chk_update_title": "檢查程式版本",
         "ver_up_to_date": "您的程式為最新版!",
         "need_update": "有新版程式，請至官方網站下載!",
-        "runnig_higher_ver_program": "目前您使用的版本比官方版本來的新，您似乎正使用非官方版本程式!",
-        "runnig_unofficial_program": "您似乎正使用非官方版本程式!"
+        "runnig_higher_ver_program": "目前您使用的版本比官方版本來的新，您似乎正在使用非官方版本程式!",
+        "runnig_unofficial_program": "您似乎正在使用非官方版本程式!",
+        "release_ver_not_exist": "目前並無官方發行版程式，您似乎正在使用非官方版本程式!"
     },
     "excel": {
         "sheet_names": [

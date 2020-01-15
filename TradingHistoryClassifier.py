@@ -21,7 +21,7 @@ import language
 # openpyxl.utils.cell.coordinate_to_tuple('B3')  // (3, 2)
 # openpyxl.utils.cell.get_column_letter(3) // C
 
-program_ver = 'Beta 1.3.1'
+program_ver = 'Beta 1.3.2'
 author = 'RavagerWT'
 
 # load program setting from settings.json
@@ -71,7 +71,7 @@ def editSetting(st, lang):
     # process GUI event
     while True:
         event, values = window.Read()
-        print('event: ', event, '\nvalues:', values)  # debug message
+        # print('event: ', event, '\nvalues:', values)  # debug message
         if event == 'OK':
             # check whether any setting change or not
             st_chk1 = values['set_lang'] != st.gen_set_lang
@@ -122,6 +122,8 @@ def editSetting(st, lang):
                 MessageBox(None, lang.msg_box_runnig_higher_ver_program, lang.msg_box_chk_update_title, 0)
             elif update_status == -1:
                 MessageBox(None, lang.msg_box_runnig_unofficail_program, lang.msg_box_chk_update_title, 0)
+            elif update_status == -2:
+                MessageBox(None, lang.msg_box_release_ver_not_exist, lang.msg_box_chk_update_title, 0)
         elif event == 'website':
             webbrowser.open(st.pgm_info_website)
         elif event is None or event == 'Cancel':
@@ -134,21 +136,38 @@ def chk_update(change_log_url, current_ver):
     # retrieve version info from github
     changelog_in_line = [each_line for each_line in urllib.request.urlopen(change_log_url)]
     latest_stable_release = changelog_in_line[2].decode('utf-8')
-    latest_stable_release_ver = version.parse(latest_stable_release[-5:])
+    temp_ver = re.search(r'Version:\s*([\d.]+)', latest_stable_release)
+    if temp_ver != None:
+        latest_stable_release_ver = version.parse(temp_ver.group(1))
+    else:
+        latest_stable_release_ver = temp_ver
+    # print(latest_stable_release_ver) # debug message
+
     latest_beta_release = changelog_in_line[3].decode('utf-8')
-    latest_beta_release_ver = version.parse(latest_beta_release[-5:])
+    temp_ver = re.search(r'Version:\s*([\d.]+)', latest_beta_release)
+    if temp_ver != None:
+        latest_beta_release_ver = version.parse(temp_ver.group(1))
+    else:
+        latest_beta_release_ver = temp_ver
+    # print(latest_beta_release_ver) # debug message
+    
     # processing program version info
     program_cut_space = current_ver.replace(' ','')
     program_channel = program_cut_space[:len(program_cut_space)-5]
     program_ver = version.parse(current_ver[-5:])
+
     # comparing version info
     if program_channel == 'Beta':
-        if program_ver < latest_beta_release_ver:
+        if latest_beta_release_ver == None:
+            update_status = -2
+        elif program_ver < latest_beta_release_ver:
             update_status = 1
         elif program_ver > latest_beta_release_ver:
             update_status = 2
     elif program_channel == 'v':
-        if program_ver < latest_stable_release_ver:
+        if latest_stable_release_ver == None:
+            update_status = -2
+        elif program_ver < latest_stable_release_ver:
             update_status = 1
         elif program_ver > latest_stable_release_ver:
             update_status = 2
@@ -646,7 +665,7 @@ def main(window, st, lang):
     xls_fileName = None
     while True:
         event, values = window.Read()
-        print('event: ', event, '\nvalues:', values)  # debug message
+        # print('event: ', event, '\nvalues:', values)  # debug message
         if event == 'Apply Settings':            
             if values['Load Setting File'] == None or values['Load Setting File'] == '':
                 MessageBox(None, lang.msg_box_select_file_first, lang.msg_box_file_op_title, 0)

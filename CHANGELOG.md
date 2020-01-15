@@ -1,9 +1,14 @@
 # TD Ameritrade Trading History Classifier
 
 - Latest Stable Version: None
-- Latest Beta Version: 1.3.1
+- Latest Beta Version: 1.3.2
 
 ## Changelog
+
+* Beta 1.3.2 (2020-01-14)
+    * NEW: adding the instruction for program localization to README.md
+    * FIX: using a new approach to fix the wrong response from chk_update() method
+    * FIX: some typo
 
 * Beta 1.3.1 (2020-01-13)
     * FIX: Not functional export excel process log checkbox

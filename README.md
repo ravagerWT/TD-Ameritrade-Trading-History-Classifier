@@ -91,6 +91,14 @@ The version control of this project follows [Semantic Versioning 2.0.0](https://
 4. Push to the branch (`git push origin feature/fooBar`)
 5. Create a new Pull Request
 
+## Localization
+1. Duplicate one copy of the `lang_enUS.json` in program file folder.
+2. Rename the file to `lang_xxYY.json`.  The `xx` shall be the language code defined in [ISO 639-1 International standards for language codes](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) and the `YY` shall be two-letter country codes defined in [ISO 3166-1 Two-letter country codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+3. Open new `lang_xxYY.json` by the proper text editor and translate all sentences to desired language.  If you don't know where to modify the file, please open `lang_zhTW.json` in the same program file folder.  By comparing `lang_enUS.json` and `lang_zhTW.json`, you are able to know where you have to modify the file. 
+4. Open `settings.json` and find `ava_lang_for_GUI` section.  Add the language name in the format `zzzzz (xxYY)` under `ava_lang_for_GUI` section.  The definition for `xx` and `YY` are same as above point.2 mentioned.  The `zzzzz` shall be the language name you want to call.
+5. If you do every steps mentioned above correctly.  You should be able to use the language you want in the program.
+6. Finally, don't forget to create a new Pull Request to help other people using the same language.
+
 ## Authors
 
 * **RavagerWT** - *Initial work* - [TD-Ameritrade-Trading-History-Classifier](https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier)
