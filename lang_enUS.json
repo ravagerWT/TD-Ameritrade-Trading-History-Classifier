@@ -23,7 +23,7 @@
     },
     "settings": {
         "author": "Author",
-        "check_update": "Check update",
+        "check_update": "Check Update",
         "website": "Official Website",
         "setting_window_title": "Program Settings",
         "localization": "Localization: ",
@@ -32,6 +32,12 @@
         "odd_col_color": "Odd column color (Hex):",
         "even_col_color": "Even column color (Hex):",
         "disp_date_fmt": "Display date format:",
+        "performance_title": "Adjust following settings could improve program performance",
+        "coloring_method_title": "Sheet coloring method",
+        "coloring_method_option": [
+            "Whole sheet",
+            "Only title"
+        ],
         "backup_settings": "Backup settings",
         "ok": "OK",
         "cancel": "Cancel"
@@ -44,13 +50,16 @@
         "select_file_first": "Please select file first!",
         "settings_file_not_change": "The settings file has not changed!",
         "color_fmt_wrong_title": "Color Format Wrong",
-        "msg_odd_col_color_fmt": "Odd column color format is worng",
-        "msg_even_col_color_fmt": "Even column color format is worng",
+        "odd_col_color_fmt": "The color format of odd column  is wrong",
+        "even_col_color_fmt": "The color format of even column is wrong",
+        "date_fmt_wrong_title": "Date Format Wrong",
+        "date_col_fmt_wrong": "The format of date is wrong!",
+        "format_wrong": "Format Wrong",
         "chk_update_title": "Check Program Version",
         "ver_up_to_date": "Your program is up to date!",
         "need_update": "There is a new version of the program, please go to the official website to download!",
-        "runnig_higher_ver_program": "Currently using version is higher than official release.  It seems you are using an unofficial program!",
-        "runnig_unofficial_program": "It seems you are using an unofficial program!",
+        "running_higher_ver_program": "Currently using version is higher than official release.  It seems you are using an unofficial program!",
+        "running_unofficial_program": "It seems you are using an unofficial program!",
         "release_ver_not_exist": "There is no official release version now.  It seems you are using an unofficial program!"
     },
     "excel": {

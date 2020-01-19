@@ -1,15 +1,22 @@
 # TD Ameritrade Trading History Classifier
 
 - Latest Stable Version: None
-- Latest Beta Version: 1.3.2
+- Latest Beta Version: 2.0.0
 
 ## Changelog
+
+* Beta 2.0.0 (2020-01-19)
+    * NEW: implement a new option allow users to decide the coloring method in spreading sheets
+    * NEW: implement date format checking mechanism
+    * NEW: project dependency document: requirements.txt
+    * NEW: add screenshots for main and setting window
+    * FIX: some typo
 
 * Beta 1.3.2 (2020-01-15)
     * NEW: adding the instruction for program localization to README.md
     * FIX: using a new approach to fix the incorrect behavior in chk_update() method
     * FIX: some typo
-    * FIX: incorrect excel error log exprot behavior in excelProcessor() method
+    * FIX: incorrect excel error log export behavior in excelProcessor() method
     * FIX: progress bar incorrect behavior
     * UPDATE: some sentences for better understanding
 
@@ -20,7 +27,7 @@
 * Beta 1.3 (2020-01-10)
     * NEW: implement progress bar to show current status
     * NEW: allow user to select the theme of program GUI
-    * NEW: implement author and offical website information in setting window
+    * NEW: implement author and official website information in setting window
     * NEW: implement check update function in setting window
     * NEW: add screenshots for main and setting window
 

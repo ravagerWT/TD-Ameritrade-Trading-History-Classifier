@@ -5,6 +5,7 @@
         "yzhang.markdown-all-in-one",
         "quicktype.quicktype",
         "tzachovadia.todo-list",
-        "vscode-snippet.snippet"
+        "vscode-snippet.snippet",
+        "streetsidesoftware.code-spell-checker"
     ]
 }

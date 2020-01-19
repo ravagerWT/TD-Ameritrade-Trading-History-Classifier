@@ -4,7 +4,7 @@
 ![Commits Since](https://img.shields.io/github/commits-since/ravagerWT/TD-Ameritrade-Trading-History-Classifier/latest/develop)
 ![License](https://img.shields.io/github/license/ravagerWT/TD-Ameritrade-Trading-History-Classifier)
 
-![](screenshot/Main%20GUI%20Beta1.3.jpg?raw=true)
+![](screenshot/Main%20GUI%20Beta2.0.0.jpg?raw=true)
 
 This python program help user easily classify the transactions history by symbol and account activity into several spreading sheets.
 
@@ -26,7 +26,7 @@ openpyxl (package)
 
 Follow the [Python Official Install instruction](https://docs.python.org/3/using/windows.html) to install it.
 
-Or follow the qucik step below:
+Or follow the quick step below:
 1. [Download](https://www.python.org/downloads/) python from official website.
 2. Double click the installer to install python (recommended) or extract the portable version python to your desired folder.
 3. If you haven't enable the `setting environment variables option` in the installer or you're using portable version, please follow the instruction to [setting environment variables](https://docs.python.org/3/using/windows.html#configuring-python).
@@ -49,7 +49,7 @@ git clone https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier
 ```
 Or
 
-Download project .zip file and extract it.
+[Download](https://github.com/ravagerWT/TD-Ameritrade-Trading-History-Classifier/releases/latest) project source code file and extract it.
 
 ## How to use
 
@@ -64,7 +64,7 @@ Download project .zip file and extract it.
 
 Q: What environment does this program run?
 
-*A: I develop and test it under Windows 10, python 3.7.  You could try to run it under differnt environment, but I can't promise it will run smoothly.*
+*A: I develop and test it under Windows 10, python 3.7.  You could try to run it under different environment, but I can't promise it will run smoothly.*
 
 Q: Could I add new trading history into processed spreadsheet file by this program?
 

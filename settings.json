@@ -33,7 +33,8 @@
     "xls_fmt": {
         "color_for_odd_column": "FFF2CC",
         "color_for_even_column": "E2EFDA",
-        "display_date_format": "%Y/%m/%d"
+        "display_date_format": "%Y/%m/%d",
+        "sht_coloring_method": 0
     },
     "xls_skip_event": [
         "ADR FEE",

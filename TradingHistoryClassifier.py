@@ -21,7 +21,7 @@ import language
 # openpyxl.utils.cell.coordinate_to_tuple('B3')  // (3, 2)
 # openpyxl.utils.cell.get_column_letter(3) // C
 
-program_ver = 'Beta 1.3.2'
+program_ver = 'Beta 2.0.0'
 author = 'RavagerWT'
 
 # load program setting from settings.json
@@ -49,6 +49,7 @@ def loadSetting(setting_file_name='settings.json'):
 def editSetting(st, lang):
     odd_color_status = False
     even_color_status = False
+    date_fmt_status = False
     # GUI layout
     layout = [
         [sg.Text(lang.st_author+': ' + author), sg.Button(lang.st_check_update, key='check update'), sg.Button(lang.st_website, key='website')],
@@ -61,7 +62,10 @@ def editSetting(st, lang):
         [sg.Text(lang.st_xls_fmt_setting)],
         [sg.Text(lang.st_odd_col_color, size=(18, 1)), sg.InputText(st.xls_fmt_color_for_odd_column, key='odd_col_color')],
         [sg.Text(lang.st_even_col_color, size=(18, 1)), sg.InputText(st.xls_fmt_color_for_even_column, key='even_col_color')],
-        [sg.Text(lang.st_disp_date_fmt, size=(18, 1)), sg.InputText(st.xls_fmt_display_date_format, key='date_fmt')],        
+        [sg.Text(lang.st_disp_date_fmt, size=(18, 1)), sg.InputText(st.xls_fmt_display_date_format, key='date_fmt')],
+        [sg.Text('_' * 100, size=(55, 1))],
+        [sg.Text(lang.st_performance_title+': ')],
+        [sg.Text(lang.st_coloring_method_title+': '), sg.InputCombo(lang.st_coloring_method_option, size=(20, 1), default_value=lang.st_coloring_method_option[st.xls_fmt_sht_coloring_method], key='coloring method', readonly=True)],
         [sg.Checkbox(lang.st_backup_settings, default=st.gen_backup_setting, enable_events=True, key='backup_settings'), sg.Button(lang.st_ok, key='OK'), sg.Cancel(lang.st_cancel, key='Cancel')]
     ]
     
@@ -79,28 +83,37 @@ def editSetting(st, lang):
             st_chk3 = values['odd_col_color'] != st.xls_fmt_color_for_odd_column
             st_chk4 = values['even_col_color'] != st.xls_fmt_color_for_even_column
             st_chk5 = values['date_fmt'] != st.xls_fmt_display_date_format
-            st_chk6 = values['backup_settings'] != st.gen_backup_setting
-            if any([st_chk1, st_chk2, st_chk3, st_chk4, st_chk5, st_chk6]):
+            st_chk6 = values['coloring method'] != lang.st_coloring_method_option[st.xls_fmt_sht_coloring_method]
+            st_chk7 = values['backup_settings'] != st.gen_backup_setting
+            if any([st_chk1, st_chk2, st_chk3, st_chk4, st_chk5, st_chk6, st_chk7]):
                 st.gen_set_lang = values['set_lang']
                 st.gen_gui_theme = values['gui_theme']
+                st.xls_fmt_sht_coloring_method = (lang.st_coloring_method_option).index(values['coloring method'])
                 # https://stackoverflow.com/questions/30241375/python-how-to-check-if-string-is-a-hex-color-code
                 # check whether the input values satisfy the format
                 if re.search(r'^(?:[0-9a-fA-F]{3}){1,2}$', values['odd_col_color']):
                     st.xls_fmt_color_for_odd_column = values['odd_col_color']
                     odd_color_status = True
                 else:
-                    window.Element('odd_col_color').Update('Wrong')
-                    MessageBox(None, lang.msg_box_msg_odd_col_color_fmt,
+                    # window.Element('odd_col_color').Update(lang.msg_box_format_wrong)
+                    MessageBox(None, lang.msg_box_odd_col_color_fmt,
                             lang.msg_box_color_fmt_wrong_title, 0)
                 if re.search(r'^(?:[0-9a-fA-F]{3}){1,2}$', values['even_col_color']):
                     st.xls_fmt_color_for_even_column = values['even_col_color']
                     even_color_status = True
                 else:
-                    window.Element('even_col_color').Update('Wrong')
-                    MessageBox(None, lang.msg_box_msg_even_col_color_fmt,
+                    # window.Element('even_col_color').Update(lang.msg_box_format_wrong)
+                    MessageBox(None, lang.msg_box_even_col_color_fmt,
                             lang.msg_box_color_fmt_wrong_title, 0)
+                if re.search(r'^(%[YyMmd]).?(%[YyMmd]).?(%[YyMmd])$', values['date_fmt']):
+                    st.xls_fmt_display_date_format = values['date_fmt']
+                    date_fmt_status = True
+                else:
+                    # window.Element('date_fmt').Update(lang.msg_box_format_wrong)
+                    MessageBox(None, lang.msg_box_date_col_fmt_wrong,
+                            lang.msg_box_date_fmt_wrong_title, 0)
                 # if color format ok, save settings
-                if odd_color_status and even_color_status:
+                if all([odd_color_status, even_color_status, date_fmt_status]):
                     st.gen_backup_setting = values['backup_settings']
                     saveSetting(st.updateSettings(), values['backup_settings'])
                     window.close()
@@ -119,9 +132,9 @@ def editSetting(st, lang):
                 MessageBox(None, lang.msg_box_need_update, lang.msg_box_chk_update_title, 0)
                 webbrowser.open(st.pgm_info_download_site)
             elif update_status == 2:
-                MessageBox(None, lang.msg_box_runnig_higher_ver_program, lang.msg_box_chk_update_title, 0)
+                MessageBox(None, lang.msg_box_running_higher_ver_program, lang.msg_box_chk_update_title, 0)
             elif update_status == -1:
-                MessageBox(None, lang.msg_box_runnig_unofficail_program, lang.msg_box_chk_update_title, 0)
+                MessageBox(None, lang.msg_box_running_unofficial_program, lang.msg_box_chk_update_title, 0)
             elif update_status == -2:
                 MessageBox(None, lang.msg_box_release_ver_not_exist, lang.msg_box_chk_update_title, 0)
         elif event == 'website':
@@ -621,18 +634,26 @@ def excelProcessor(xls_fileName, exp_error_log, st, lang, window, symbol_list = 
 
     #// TODO: performance optimization required: need a new approach to set the cell color
     # setting cell color
+    if st.xls_fmt_sht_coloring_method == 0:
+        STH_last_row = ws_STH.max_row
+        OD_last_row = ws_OD.max_row
+        WH_last_row = ws_WH.max_row
+    elif st.xls_fmt_sht_coloring_method == 1:
+        STH_last_row = 2
+        OD_last_row = 1
+        WH_last_row = 1
     for k in range(len(symbol_list)):
         if k % 2 == 0:
             color_fill = st.xls_fmt_color_for_even_column
         else:
             color_fill = st.xls_fmt_color_for_odd_column
-        for row in ws_STH.iter_rows(min_col=k*4+2, min_row=1, max_col=k*4+5, max_row=ws_STH.max_row):
+        for row in ws_STH.iter_rows(min_col=k*4+2, min_row=1, max_col=k*4+5, max_row=STH_last_row):
             for cell in row:
                 cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
-        for row in ws_OD.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_OD.max_row):
+        for row in ws_OD.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=OD_last_row):
             for cell in row:
                 cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
-        for row in ws_WH.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=ws_WH.max_row):
+        for row in ws_WH.iter_rows(min_col=k+2, min_row=1, max_col=k+2, max_row=WH_last_row):
             for cell in row:
                 cell.fill = PatternFill(fgColor=color_fill, fill_type="solid")
         # update progress bar status

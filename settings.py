@@ -40,6 +40,7 @@ class Thfset:
         self.xls_fmt_color_for_even_column = data['xls_fmt']['color_for_even_column']
         # date format shall follow the instruction in https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
         self.xls_fmt_display_date_format = data['xls_fmt']['display_date_format']
+        self.xls_fmt_sht_coloring_method = data['xls_fmt']['sht_coloring_method']
 
         # excel skip event list
         self.xls_skip_event = data['xls_skip_event']
@@ -63,6 +64,7 @@ class Thfset:
         self.data['xls_fmt']['color_for_odd_column'] = self.xls_fmt_color_for_odd_column
         self.data['xls_fmt']['color_for_even_column'] = self.xls_fmt_color_for_even_column
         self.data['xls_fmt']['display_date_format'] = self.xls_fmt_display_date_format
+        self.data['xls_fmt']['sht_coloring_method'] = self.xls_fmt_sht_coloring_method
 
         return self.data
 
