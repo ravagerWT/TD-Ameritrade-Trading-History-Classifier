@@ -1,13 +1,14 @@
 # TD Ameritrade Trading History Classifier
 
 - Latest Stable Version: None
-- Latest Beta Version: 2.0.0
+- Latest Beta Version: 2.0.1
 
 ## Changelog
 
 * Beta 2.0.1 (2020-01-XX)
     * NEW: introduce pipenv
     * UPDATE: move .vscode/settings.json out of version control
+    * UPDATE: requirements.txt
 
 * Beta 2.0.0 (2020-01-19)
     * NEW: implement a new option allow users to decide the coloring method in spreading sheets

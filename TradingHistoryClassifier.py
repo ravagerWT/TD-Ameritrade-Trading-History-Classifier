@@ -21,7 +21,7 @@ import language
 # openpyxl.utils.cell.coordinate_to_tuple('B3')  // (3, 2)
 # openpyxl.utils.cell.get_column_letter(3) // C
 
-program_ver = 'Beta 2.0.0'
+program_ver = 'Beta 2.0.1'
 author = 'RavagerWT'
 
 # load program setting from settings.json
