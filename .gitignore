@@ -6,3 +6,4 @@ __pycache__/*.*
 *.docx
 *.tmp
 Thumbs.db
+/.vscode/settings.json
